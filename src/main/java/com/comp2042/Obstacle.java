@@ -17,7 +17,7 @@ public class Obstacle {
        this.y = y;
     }
 
-    public void newObstacles(Snake snek, Coin coin, int amount) {
+    public void newObstacles(Snake snake, Coin coin, int amount) {
         if (obstacles.size() > 50) {
             return;
         }
@@ -26,7 +26,7 @@ public class Obstacle {
         for (int i=0; i<amount; i++) {
             do {
                 p = new Point(rnd.nextInt(x) + 1, rnd.nextInt(y));
-            } while (coin.getPos().equals(p) || snek.getBody().contains(p) || snek.getHead().equals(p));
+            } while (coin.getPos().equals(p) || snake.getBody().contains(p) || snake.getHead().equals(p));
             obstacles.add(p);
         }
     }
