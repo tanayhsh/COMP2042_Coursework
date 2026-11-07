@@ -122,15 +122,13 @@ public class GameController {
         }
     }
 
-    private boolean valKey(KeyCode key) {
-        if (!key.isArrowKey()) return false;
-        else {
-            if (key.equals(KeyCode.LEFT)) if (!this.key.equals(KeyCode.RIGHT)) return true;
-            if (key.equals(KeyCode.RIGHT)) if (!this.key.equals(KeyCode.LEFT)) return true;
-            if (key.equals(KeyCode.DOWN)) if (!this.key.equals(KeyCode.DOWN)) return true;
-            if (key.equals(KeyCode.UP)) return !this.key.equals(KeyCode.DOWN);
-            return false;
-        }
+    private boolean valKey(KeyCode newkey) {
+        if (!newkey.isArrowKey()) return false;
+        return switch (newkey){
+            case LEFT, RIGHT -> key != KeyCode.LEFT && key != KeyCode.RIGHT;         // changed the if statement to switch case to make sure
+            case UP, DOWN    -> key != KeyCode.UP && key != KeyCode.DOWN;            // the player can only change direction by 90 degrees
+            default          -> false;
+        };
     }
 
     private void reset() {
