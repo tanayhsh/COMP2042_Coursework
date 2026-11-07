@@ -25,8 +25,11 @@ public class Obstacle {
         Point p;
         for (int i=0; i<amount; i++) {
             do {
-                p = new Point(rnd.nextInt(x) + 1, rnd.nextInt(y));
-            } while (coin.getPos().equals(p) || snek.getBody().contains(p) || snek.getHead().equals(p));
+                p = new Point(rnd.nextInt(x), rnd.nextInt(y));          // changed from rnd.nextInt(x)+1 to current to match new obstacle position to grid
+            } while (coin.getPos().equals(p)
+                    || snek.getBody().contains(p)
+                    || snek.getHead().equals(p)
+                    || obstacles.contains(p));                         // added this so that new obstacles do not spawn inside each other, messing with the total score
             obstacles.add(p);
         }
     }
