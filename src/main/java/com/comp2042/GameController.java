@@ -122,15 +122,15 @@ public class GameController {
         }
     }
 
-    private boolean valKey(KeyCode key) {
-        if (!key.isArrowKey()) return false;
-        else {
-            if (key.equals(KeyCode.LEFT)) if (!this.key.equals(KeyCode.RIGHT)) return true;
-            if (key.equals(KeyCode.RIGHT)) if (!this.key.equals(KeyCode.LEFT)) return true;
-            if (key.equals(KeyCode.DOWN)) if (!this.key.equals(KeyCode.DOWN)) return true;
-            if (key.equals(KeyCode.UP)) return !this.key.equals(KeyCode.DOWN);
-            return false;
-        }
+    private boolean valKey(KeyCode newKey) {
+        if (!newKey.isArrowKey()) return false;
+
+        // replaced the else block with the switch case to improve readability and also fixed the UP DOWN illegal direct direction reversal
+        return switch (newKey) {
+            case LEFT, RIGHT -> key != KeyCode.LEFT && key != KeyCode.RIGHT;
+            case UP, DOWN ->  key != KeyCode.UP && key != KeyCode.DOWN;
+            default -> false;
+        };
     }
 
     private void reset() {
