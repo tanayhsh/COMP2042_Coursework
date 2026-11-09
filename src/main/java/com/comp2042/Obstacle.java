@@ -18,7 +18,7 @@ public class Obstacle {
        this.y = y;
     }
 
-    public void newObstacles(Snake snek, Coin coin, int amount) {
+    public void newObstacles(Snake snake, Coin coin, int amount) {
         if (obstacles.size() > 50) {
             return;
         }
@@ -28,10 +28,10 @@ public class Obstacle {
             do {
                 p = new Point(rnd.nextInt(x), rnd.nextInt(y));                      // removed + 1 to match the grid
             } while (coin.getPos().equals(p)
-                    || snek.getBody().contains(p)
-                    || snek.getHead().equals(p)
+                    || snake.getBody().contains(p)
+                    || snake.getHead().equals(p)
                     || obstacles.contains(p)   // added obstacles.contains(p) to ensure obstacles dont spawn on each other
-                    || tooCLoseToHead(p, snek.getHead()));
+                    || tooCLoseToHead(p, snake.getHead()));
             obstacles.add(p);
         }
     }

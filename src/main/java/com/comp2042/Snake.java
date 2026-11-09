@@ -126,7 +126,7 @@ public class Snake {
         return new Point(head);
     }
 
-    public boolean getDead() {
+    public boolean isDead() {
         return dead;
     }
 
