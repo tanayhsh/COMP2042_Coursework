@@ -39,6 +39,7 @@ public class Snake {
 
     public void move(char dir) {
         body.add(new Point(head));
+        Point previous = new Point(head);
         switch (dir) {
             case 'U':
                 snakeDir = 0;
@@ -83,6 +84,11 @@ public class Snake {
                     head.setLocation(0, head.getY());
                 }
                 break;
+        }
+
+        if (!dead && obstacle.getObstacles().contains(head)){
+            head.setLocation(previous);
+            dead = true;
         }
 
         if (body.size() > 4 && hitSelf() && !body.get(0).equals(head)) {
