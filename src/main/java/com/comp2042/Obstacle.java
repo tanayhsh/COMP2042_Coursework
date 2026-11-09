@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Obstacle {
+    private static final int safe_dist = 3;
     private Color color = Color.BLACK;
     private ArrayList<Point> obstacles = new ArrayList<>();
     private int x;
@@ -26,9 +27,17 @@ public class Obstacle {
         for (int i=0; i<amount; i++) {
             do {
                 p = new Point(rnd.nextInt(x), rnd.nextInt(y));                      // removed + 1 to match the grid
-            } while (coin.getPos().equals(p) || snek.getBody().contains(p) || snek.getHead().equals(p) || obstacles.contains(p));   // added obstacles.contains(p) to ensure obstacles dont spawn on each other
+            } while (coin.getPos().equals(p)
+                    || snek.getBody().contains(p)
+                    || snek.getHead().equals(p)
+                    || obstacles.contains(p)   // added obstacles.contains(p) to ensure obstacles dont spawn on each other
+                    || tooCLoseToHead(p, snek.getHead()));
             obstacles.add(p);
         }
+    }
+
+    private boolean tooCLoseToHead(Point p, Point head){
+        return Math.abs(p.x - head.x) + Math.abs(p.y - head.y) <= safe_dist;
     }
 
     public Color getColor() {
