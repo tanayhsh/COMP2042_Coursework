@@ -28,7 +28,13 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | GameController | Fixed duplicate `ran == 1` in `newCoin()`; rewrote `valKey()` | Bug fixes (see below) |
 | Obstacle | Spawn range changed to `0..x-1`; added duplicate-position check | Bug fixes (see below) |
 | Snake | Added obstacle check after every move in `move()` | Bug fix (see below) |
-
+| GameController | Removed `calculateBonusScore()`, `legacyScoreMultiplier`, `coinSoundPath`, `unusedObstacleCount`; updated `drawGrid` calls | Dead code that was never executed; follows `GameView` refactor |
+| Snake | Removed unused `headColor`/`bodyColor`; renamed `getDead()` to `isDead()` | Snake is drawn with images, so colours were dead code|
+| Game | Removed duplicate `powerUp` assignment; renamed `multiplier` to `cellSize` | Redundant line; value is the pixel size of one grid cell |
+| GameView | Merged duplicate `drawGrid` methods, removed unused `gc`, `a`, `b` params; `makeScene()` takes an `Obstacle` | DRY: rendering logic in one place |
+| MainMenuController | Passes `obstacle` to `makeScene()` | Follows `GameView` refactor |
+| ViewManager | Renamed `initalizeMainMenu()` to `initializeMainMenu()` | Spelling typo |
+| All classes | Renamed `snek` to `snake` | Clear, descriptive naming |
 ### Bugs fixed
 | Bug | Location | Cause | Fix |
 |---|---|---|---|
@@ -38,5 +44,6 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Obstacles could stack on one cell | `Obstacle.newObstacles()` | No check against existing obstacles, which made `maxScore` inaccurate | Added `obstacles.contains(p)` check |
 | Snake survived wrapping onto an obstacle | `Snake.move()` | Obstacle check ran before the border wrap, so the wrapped position was never checked | Added an obstacle check after every move |
 | Obstacles could spawn directly in front of the snake | `Obstacle.newObstacles()` | Only the head cell itself was excluded | Added a safe zone: no obstacles within 3 moves of the head |
+
 ## Unexpected Problems
 (none so far)

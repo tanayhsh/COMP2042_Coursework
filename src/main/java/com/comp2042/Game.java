@@ -8,7 +8,7 @@ public class Game {
     private int height;
     private int score;
     private int maxScore;
-    private double multiplier;
+    private double cellSize;
     private int scorePoints;
     private double speed;
     private boolean powerUp;
@@ -29,11 +29,11 @@ public class Game {
         width = x;
         height = y;
         maxScore = x * y - 2;
-        this.powerUp = powerUp;
+
         if (height > 50) {
-            multiplier = 10;
+            cellSize = 10;
         } else {
-            multiplier = 20;
+            cellSize = 20;
         }
     }
 
@@ -66,8 +66,8 @@ public class Game {
         return color;
     }
 
-    public double getMultiplier() {
-        return multiplier;
+    public double getCellSize() {
+        return cellSize;
     }
 
     public void addPoints(int n) {
