@@ -10,7 +10,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 (to be added later)
 
 ## Implemented but Not Working Properly
-(none so far)
+- **Obstacle safe zone and wrapping:** the safe zone uses grid distance, so it doesn't account for border wrapping. An obstacle can still appear just across a border when the snake is about to wrap.
 
 ## Features Not Implemented
 (none so far)
@@ -37,6 +37,6 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Obstacles off-grid / never in column 0 | `Obstacle.newObstacles()` | `rnd.nextInt(x) + 1` produced range `1..x` | Changed to `rnd.nextInt(x)` |
 | Obstacles could stack on one cell | `Obstacle.newObstacles()` | No check against existing obstacles, which made `maxScore` inaccurate | Added `obstacles.contains(p)` check |
 | Snake survived wrapping onto an obstacle | `Snake.move()` | Obstacle check ran before the border wrap, so the wrapped position was never checked | Added an obstacle check after every move |
-
+| Obstacles could spawn directly in front of the snake | `Obstacle.newObstacles()` | Only the head cell itself was excluded | Added a safe zone: no obstacles within 3 moves of the head |
 ## Unexpected Problems
 (none so far)
