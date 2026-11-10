@@ -31,6 +31,7 @@ public class GameView {
     private double fullScale = 1;
     private boolean fullsize = false;
     private int[][] turnArray = new int[MainMenuController.getxValue()][MainMenuController.getyValue()];
+    private final EntityManager entity = new EntityManager();
 
     public GameView(Game game) {
         this.game = game;
@@ -93,7 +94,7 @@ public class GameView {
         gc.setFill(game.getColor());
         gc.fillRect(0, 0, gridCanvas.getWidth(), gridCanvas.getHeight());
 
-        gc.drawImage(coin.getImage(), (coin.getPos().x * game.getCellSize()) * fullScale, (coin.getPos().y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale - 3 * fullScale, game.getCellSize() * fullScale - 3 * fullScale);
+        gc.drawImage(entity.getCoinImages(coin.getType()), (coin.getPos().x * game.getCellSize()) * fullScale, (coin.getPos().y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale - 3 * fullScale, game.getCellSize() * fullScale - 3 * fullScale);
 
         int bodyIndex = 0;
         for (Point point : snake.getBody()) {
@@ -110,20 +111,20 @@ public class GameView {
     }
 
     private void drawHead(Snake snake) {
-        snake.getImageViewHead().setRotate(snake.getSnakeDir());
+        entity.getHead().setRotate(snake.getSnakeDir());
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
-        Image rotatedImage = snake.getImageViewHead().snapshot(params, null);
+        Image rotatedImage = entity.getHead().snapshot(params, null);
         gc.drawImage(rotatedImage, (snake.getHead().x * game.getCellSize()) * fullScale, (snake.getHead().y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale * fullScale, game.getCellSize() * fullScale * fullScale);
     }
 
     private void drawBody(Snake snake, Point point, int index) {
         Image rotatedImage;
         if (snake.getBody().size() <= 1) {
-            snake.getImageViewTail().setRotate(snake.getSnakeDir());
+            entity.getTail().setRotate(snake.getSnakeDir());
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
-            rotatedImage = snake.getImageViewTail().snapshot(params, null);
+            rotatedImage = entity.getTail().snapshot(params, null);
         } else if (index == 0) {
             int rotateTail;
             if (snake.getBody().get(1).getX() == snake.getBody().get(0).getX() && snake.getBody().get(1).getY() == snake.getBody().get(0).getY() - 1) {
@@ -135,20 +136,20 @@ public class GameView {
             } else {
                 rotateTail = 90;
             }
-            snake.getImageViewTail().setRotate(rotateTail);
+            entity.getTail().setRotate(rotateTail);
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
-            rotatedImage = snake.getImageViewTail().snapshot(params, null);
+            rotatedImage = entity.getTail().snapshot(params, null);
         } else if (index > 0 && (turnArray[(int) snake.getBody().get(index).getX()][(int) snake.getBody().get(index).getY()] != 0)) {
-            snake.getImageViewTurn().setRotate(90 * turnArray[(int) snake.getBody().get(index).getX()][(int) snake.getBody().get(index).getY()]);
+            entity.getTurn().setRotate(90 * turnArray[(int) snake.getBody().get(index).getX()][(int) snake.getBody().get(index).getY()]);
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
-            rotatedImage = snake.getImageViewTurn().snapshot(params, null);
+            rotatedImage = entity.getTurn().snapshot(params, null);
         } else {
-            snake.getImageViewBody().setRotate(snake.getBodyDir(index));
+            entity.getBody().setRotate(snake.getBodyDir(index));
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
-            rotatedImage = snake.getImageViewBody().snapshot(params, null);
+            rotatedImage = entity.getBody().snapshot(params, null);
         }
 
         if (turnArray[(int) snake.getBody().get(0).getX()][(int) snake.getBody().get(0).getY()] != 0) {

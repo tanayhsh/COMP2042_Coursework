@@ -1,13 +1,14 @@
 package com.comp2042;
 
-import javafx.scene.image.Image;
-
 import java.awt.*;
 import java.util.Random;
 
 public class Coin {
     private Point pos;
-    private Image image = new Image("resources/views/res/redcoin.png");
+
+    public CoinType getType(){
+        return CoinType.RED;
+    }
 
     public Coin(int x, int y, Snake snake, Obstacle obstacle) {
         int tx;
@@ -28,9 +29,5 @@ public class Coin {
     public int getPoints() {
         int points = 5;
         return points;
-    }
-
-    public Image getImage() {
-        return image;
     }
 }
