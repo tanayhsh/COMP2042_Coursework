@@ -18,7 +18,8 @@ https://github.com/tanayhsh/COMP2042_Coursework
 ## New Java Classes
 | Class | Location | Purpose |
 |---|---|---|
-| (none yet) | | |
+| EntityManager | `com.comp2042.EntityManager` | Loads and holds all snake and coin images so model classes contain no JavaFX code |
+| CoinType | `com.comp2042.CoinType` | Enum identifying each coin kind so the view can choose the matching image |
 
 ## Modified Java Classes
 
@@ -35,6 +36,10 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | MainMenuController | Passes `obstacle` to `makeScene()` | Follows `GameView` refactor |
 | ViewManager | Renamed `initalizeMainMenu()` to `initializeMainMenu()` | Spelling typo |
 | All classes | Renamed `snek` to `snake` | Clear, descriptive naming |
+| Snake | Removed all `Image`/`ImageView` fields and getters | makes Snake unit testable without JavaFX |
+| Coin, GoldCoin, BlueCoin, RainbowCoin, SilverCoin | Removed `Image` fields and `getImage()`; added `getType()` returning a `CoinType` | each image now loads once instead of on every coin spawn |
+| GameView | Uses `EntityManager` for all images | Rendering code now owns the visuals |
+
 ### Bugs fixed
 | Bug | Location | Cause | Fix |
 |---|---|---|---|
