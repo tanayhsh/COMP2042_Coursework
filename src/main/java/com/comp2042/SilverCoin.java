@@ -1,20 +1,17 @@
 package com.comp2042;
 
-import javafx.scene.image.Image;
-
 public class SilverCoin extends Coin {
-    private Image image = new Image("resources/views/res/silvercoin.png");
 
     public SilverCoin(int x, int y, Snake snake, Obstacle obstacle) {
         super(x, y, snake, obstacle);
     }
 
-    public Image getImage() {
-        return image;
-    }
-
     public int getPoints() {
         int points = 5;
         return points;
+    }
+    @Override
+    public CoinType getType(){
+        return CoinType.SILVER;
     }
 }
