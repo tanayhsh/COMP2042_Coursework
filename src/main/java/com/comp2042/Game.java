@@ -8,6 +8,7 @@ public class Game {
     private int height;
     private int score;
     private int maxScore;
+    private int initialMaxScore;
     private double cellSize;
     private int scorePoints;
     private double speed;
@@ -28,7 +29,8 @@ public class Game {
         this.powerUp = powerUp;
         width = x;
         height = y;
-        maxScore = x * y - 2;
+        initialMaxScore = x * y - 2;
+        maxScore = initialMaxScore;
 
         if (height > 50) {
             cellSize = 10;
@@ -45,8 +47,8 @@ public class Game {
         score++;
     }
 
-    public void decMaxScore(int num) {
-        this.maxScore -= (num - 1);
+    public void decMaxScore(int obstacleCount) {
+        this.maxScore -= obstacleCount;
     }
 
     public int getWidth() {
@@ -60,6 +62,7 @@ public class Game {
     public void resetScore() {
         score = 0;
         scorePoints = 0;
+        maxScore = initialMaxScore;
     }
 
     public Color getColor() {
@@ -88,5 +91,9 @@ public class Game {
 
     public boolean isNoBorder() {
         return noBorder;
+    }
+
+    public int getMaxScore() {
+        return maxScore;
     }
 }
