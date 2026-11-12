@@ -19,8 +19,8 @@ https://github.com/tanayhsh/COMP2042_Coursework
 ## New Java Classes
 | Class | Location | Purpose |
 |---|---|---|
-| EntityManager | `com.comp2042.EntityManager` | Loads and holds all snake and coin images so model classes contain no JavaFX code |
-| CoinType | `com.comp2042.CoinType` | Enum identifying each coin kind so the view can choose the matching image |
+| EntityManager | `com.comp2042.view.EntityManager` | Loads and holds all snake and coin images so model classes contain no JavaFX code |
+| CoinType | `com.comp2042.model.CoinType` | Enum identifying each coin kind so the view can choose the matching image |
 
 ## Modified Java Classes
 

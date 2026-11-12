@@ -1,12 +1,12 @@
-package com.comp2042;
+package com.comp2042.model;
 
+import com.comp2042.model.coin.Coin;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.Point;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 
 class ObstacleTest {

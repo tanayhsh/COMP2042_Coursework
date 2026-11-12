@@ -1,5 +1,11 @@
-package com.comp2042;
+package com.comp2042.view;
 
+import com.comp2042.controller.GameController;
+import com.comp2042.controller.MainMenuController;
+import com.comp2042.model.Game;
+import com.comp2042.model.Obstacle;
+import com.comp2042.model.Snake;
+import com.comp2042.model.coin.Coin;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
