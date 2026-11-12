@@ -22,6 +22,7 @@ public class GameView {
     public Label gameOverLabel;
     public Label gameWonLabel;
     public Label scoreLabel;
+    public Label pausedLable;
     private boolean gameOverVis = false;
     private boolean gameWonVis = false;
 
@@ -61,6 +62,14 @@ public class GameView {
         scoreLabel.getStylesheets().add(css);
         scoreLabel.setFont(new Font("Arial", 20));
         scoreLabel.setVisible(true);
+
+        pausedLable = new Label("Paused");
+        pausedLable.setFont(new Font("Ariel", 20));
+        pausedLable.setVisible(false);
+    }
+
+    public void showPaused(boolean paused){
+        pausedLable.setVisible(paused);
     }
 
     public void scaleToFullscreen(boolean fullScreen, Stage primaryStage, Obstacle obstacle, Snake snake, Coin coin) {
