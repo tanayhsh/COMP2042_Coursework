@@ -47,6 +47,7 @@ public class ViewManager {
         gameStage.setTitle("Snake Game");
         gameStage.getIcons().add(snakeLogo);
         gameStage.setResizable(false);
+        gameStage.setFullScreenExitHint("Press - to exit full screen");
     }
 
     public Stage getGameStage() {
