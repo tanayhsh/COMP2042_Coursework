@@ -55,7 +55,7 @@ class SnakeTest {
 
     @Test
     void hittingObstacleKillSnake(){
-        Snake snake = new Snake(size,size, false, obstacle);
+        Snake snake = new Snake(size, size, false, obstacle);
         obstacle.getObstacles().add(new Point(9,10));
         snake.move('L');
         assertTrue(snake.isDead());
@@ -71,5 +71,15 @@ class SnakeTest {
         }
         assertTrue(snake.isDead());
         assertEquals(new Point(10,0), snake.getHead());
+    }
+
+    @Test
+    void dyingDoesNotLeaveBodySegmentUnderHead() {
+        obstacle.getObstacles().add(new Point(9, 10));
+        Snake snake = new Snake(size, size, false, obstacle);
+        snake.move('L');
+        assertTrue(snake.isDead());
+        assertFalse(snake.getBody().contains(snake.getHead()));
+        assertEquals(1, snake.getBody().size());
     }
 }
