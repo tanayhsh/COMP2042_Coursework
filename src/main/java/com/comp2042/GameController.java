@@ -61,9 +61,7 @@ public class GameController {
 
             keyPressed = false;
 
-            if (!snake.isDead() || snake.hitSelf()) {
-                gameView.drawGrid(coin, snake, obstacle);
-            }
+            gameView.drawGrid(coin, snake, obstacle);
 
             gameView.gameWon();
             gameView.gameOver(snake);
