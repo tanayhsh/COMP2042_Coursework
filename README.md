@@ -7,7 +7,8 @@ https://github.com/tanayhsh/COMP2042_Coursework
 (to be added later)
 
 ## Implemented and Working Properly
-(to be added later)
+- `+` / `=` / numpad `+`: enter fullscreen
+- `-` / numpad `-`: exit fullscreen
 
 ## Implemented but Not Working Properly
 - **Obstacle safe zone and wrapping:** the safe zone uses grid distance, so it doesn't account for border wrapping. An obstacle can still appear just across a border when the snake is about to wrap.
@@ -54,5 +55,11 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Body segment left under head on death | `Snake.move()` | Head position added to body before death check | Remove the extra segment when the head is moved back |
 | Turn sprites left over after reset | `GameView.turnArray` | Array never cleared | Added `resetTurns()`, called from `reset()` |
 | ESC left the game loop running and kept the old direction | `GameController.handle()` | Timeline not stopped; static `key`/`lastKey` not reset | Stop the animation and reset direction on ESC |
+| Snake drawn too large in fullscreen | `GameView.drawHead()/drawBody()` | `fullScale` applied twice (`cellSize * fullScale * fullScale`) | Apply it once |
+| `+` key rarely triggered fullscreen | `GameController.handle()` | `KeyCode.PLUS` only fires on some keyboards | Also accept `EQUALS`, `ADD`, and `SUBTRACT` for minus |
+| Fullscreen hint said "Press ESC", which also returns to menu | `ViewManager.initGameStage()` | JavaFX default exit key clashed with the game's ESC | Hint now says "Press -"|
+| Final frame not drawn on wall/obstacle death | `GameController` timeline | Redraw skipped unless the snake hit itself | Always redraw |
+| Confusing scaling variable names | `GameView.scaleToFullscreen()` | `xScaling` used the screen height | Renamed to `heightScale`/`widthScale`, used `Math.min` |
+
 ## Unexpected Problems
 (none so far)
