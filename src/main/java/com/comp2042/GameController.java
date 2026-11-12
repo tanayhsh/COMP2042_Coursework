@@ -34,7 +34,9 @@ public class GameController {
         animation.setRate(game.getSpeed());
     }
 
-    private final Timeline animation = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+    private final Timeline animation = new Timeline(new KeyFrame(Duration.seconds(1), event -> tick()));
+
+    private void tick(){
         if (snake.isDead()) {
             return;
         } else {
@@ -53,7 +55,10 @@ public class GameController {
                 powerCoin();
                 game.incScore();
                 if (game.gameWon()) {
+                    animation.stop();
                     gameView.drawGrid(coin, snake, obstacle);
+                    gameView.gameWon();
+                    gameView.updateScoreLabel();
                     return;
                 }
                 newCoin();
@@ -67,10 +72,14 @@ public class GameController {
             gameView.gameOver(snake);
             gameView.updateScoreLabel();
         }
-    }));
+    }
+
+    private boolean isGameOver(){
+        return snake.isDead() || game.gameWon();
+    }
 
     public void handle(KeyEvent event) {
-        if (event.getCode().isArrowKey()) animation.play();
+        if (event.getCode().isArrowKey() && !isGameOver()) animation.play();
 
         if (valKey(event.getCode()) && !keyPressed) {
             lastKey = key;
