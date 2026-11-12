@@ -77,6 +77,10 @@ public class Snake {
             dead = true;
         }
 
+        if (dead && head.equals(previous)){
+            body.remove(body.size() - 1);
+        }
+
         if (body.size() > 4 && hitSelf() && !body.get(0).equals(head)) {
             dead = true;
         }

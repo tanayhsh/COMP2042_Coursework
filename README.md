@@ -49,6 +49,10 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Obstacles could stack on one cell | `Obstacle.newObstacles()` | No check against existing obstacles, which made `maxScore` inaccurate | Added `obstacles.contains(p)` check |
 | Snake survived wrapping onto an obstacle | `Snake.move()` | Obstacle check ran before the border wrap, so the wrapped position was never checked | Added an obstacle check after every move |
 | Obstacles could spawn directly in front of the snake | `Obstacle.newObstacles()` | Only the head cell itself was excluded | Added a safe zone: no obstacles within 3 moves of the head |
-
+| maxScore off by one per obstacle | `Game.decMaxScore()` | Subtracted `num - 1` instead of `num`; could make winning impossible and freeze coin spawning | Subtract exactly one per obstacle |
+| maxScore not restored on reset | `Game.resetScore()` | Only score and points were reset | Store `initialMaxScore` and restore it |
+| Body segment left under head on death | `Snake.move()` | Head position added to body before death check | Remove the extra segment when the head is moved back |
+| Turn sprites left over after reset | `GameView.turnArray` | Array never cleared | Added `resetTurns()`, called from `reset()` |
+| ESC left the game loop running and kept the old direction | `GameController.handle()` | Timeline not stopped; static `key`/`lastKey` not reset | Stop the animation and reset direction on ESC |
 ## Unexpected Problems
 (none so far)

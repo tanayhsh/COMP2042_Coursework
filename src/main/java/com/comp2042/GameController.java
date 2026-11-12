@@ -131,6 +131,8 @@ public class GameController {
         coin = new Coin(game.getWidth(), game.getHeight(), snake, obstacle);
 
         animation.setRate(game.getSpeed());
+        lastKey = KeyCode.LEFT;
+        gameView.resetTurns();
         key = KeyCode.LEFT;
         keyPressed = false;
         game.resetScore();
