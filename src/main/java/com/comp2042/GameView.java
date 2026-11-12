@@ -66,15 +66,11 @@ public class GameView {
     public void scaleToFullscreen(boolean fullScreen, Stage primaryStage, Obstacle obstacle, Snake snake, Coin coin) {
         primaryStage.setFullScreen(fullScreen);
 
-        double xScaling = Screen.getPrimary().getVisualBounds().getHeight() / initY;
-        double yScaling = Screen.getPrimary().getVisualBounds().getWidth() / initX;
+        double heightScale = Screen.getPrimary().getVisualBounds().getHeight() / initY;
+        double widthScale = Screen.getPrimary().getVisualBounds().getWidth() / initX;
 
         if (fullScreen && !fullsize) {
-            if (xScaling < yScaling) {
-                fullScale = xScaling;
-            } else {
-                fullScale = yScaling;
-            }
+            fullScale = Math.min(heightScale,widthScale);
             gridCanvas.setWidth(gridCanvas.getWidth() * fullScale);
             gridCanvas.setHeight(gridCanvas.getHeight() * fullScale);
             fullsize = true;
