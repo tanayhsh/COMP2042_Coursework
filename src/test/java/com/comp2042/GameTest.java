@@ -9,6 +9,10 @@ class GameTest{
         return new Game(20,20,true, 'E');
     }
 
+    private Game newGame(int width, int height){
+        return new Game(width, height, true, 'E');
+    }
+
     @Test
     void calculateMaxScoreCorrectly(){
         assertEquals(398, newGame().getMaxScore());
@@ -38,4 +42,32 @@ class GameTest{
         assertEquals(0, game.getScorePoints());
         assertFalse(game.gameWon());
     }
+
+    @Test
+    void notWonBeforeBoardIsFull(){
+        Game game = newGame(2, 2);
+        game.incScore();
+        assertFalse(game.gameWon());
+    }
+
+    @Test
+    void wonWhenScoreReachesCoinsToWin(){
+        Game game = newGame(2,2);
+        game.incScore();
+        game.incScore();
+        assertTrue(game.gameWon());
+    }
+
+    @Test
+    void obstaclesReduceCoinsNeededToWin(){
+        Game game = newGame(3,3);
+        assertEquals(7, game.getMaxScore());
+        game.decMaxScore(2);
+        assertEquals(5, game.getMaxScore());
+        for (int i =0; i < 5; i++){
+            game.incScore();
+        }assertTrue(game.gameWon());
+
+    }
+
 }

@@ -21,6 +21,7 @@ public class GameController {
     public static KeyCode key = KeyCode.LEFT;
     public static KeyCode lastKey = KeyCode.LEFT;
     private boolean keyPressed = false;
+    private boolean paused = false;
 
     public GameController(Snake snake, Coin coin, Game game, GameView gameView, Obstacle obstacle, Stage stage) {
         this.snake = snake;
@@ -34,7 +35,9 @@ public class GameController {
         animation.setRate(game.getSpeed());
     }
 
-    private final Timeline animation = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+    private final Timeline animation = new Timeline(new KeyFrame(Duration.seconds(1), event -> tick()));
+
+    private void tick(){
         if (snake.isDead()) {
             return;
         } else {
@@ -53,7 +56,10 @@ public class GameController {
                 powerCoin();
                 game.incScore();
                 if (game.gameWon()) {
+                    animation.stop();
                     gameView.drawGrid(coin, snake, obstacle);
+                    gameView.gameWon();
+                    gameView.updateScoreLabel();
                     return;
                 }
                 newCoin();
@@ -67,12 +73,16 @@ public class GameController {
             gameView.gameOver(snake);
             gameView.updateScoreLabel();
         }
-    }));
+    }
+
+    private boolean isGameOver(){
+        return snake.isDead() || game.gameWon();
+    }
 
     public void handle(KeyEvent event) {
-        if (event.getCode().isArrowKey()) animation.play();
+        if (event.getCode().isArrowKey() && !isGameOver() && !paused) animation.play();
 
-        if (valKey(event.getCode()) && !keyPressed) {
+        if (!paused && valKey(event.getCode()) && !keyPressed) {
             lastKey = key;
             key = event.getCode();
             keyPressed = true;
@@ -80,7 +90,7 @@ public class GameController {
         }
 
         if (event.getCode().equals(KeyCode.P)) {
-            animation.stop();
+            togglePaused();
         }
 
         if (event.getCode().equals(KeyCode.TAB)) {
@@ -104,6 +114,10 @@ public class GameController {
         }
 
         if (event.getCode().equals(KeyCode.ESCAPE)) {
+            animation.stop();
+            paused = false;
+            key = KeyCode.LEFT;
+            lastKey = KeyCode.LEFT;
             MainMenuController mainMenuController = new MainMenuController();
             mainMenuController.getViewManager().getPrimaryStage().show();
             mainMenuController.getViewManager().getGameStage().close();
@@ -134,6 +148,8 @@ public class GameController {
         gameView.resetTurns();
         key = KeyCode.LEFT;
         keyPressed = false;
+        paused = false;
+        gameView.showPaused(false);
         game.resetScore();
         obstacle.reset();
 
@@ -178,5 +194,19 @@ public class GameController {
         } else {
             coin = new Coin(game.getWidth(), game.getHeight(), snake, obstacle);
         }
+    }
+
+    private void togglePaused(){
+        if (isGameOver()){
+            return;
+        }
+        if (paused){
+            paused = false;
+            animation.play();
+        } else if (animation.getStatus() == Animation.Status.RUNNING) {
+            paused = true;
+            animation.pause();
+        }
+        gameView.showPaused(paused);
     }
 }
