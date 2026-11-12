@@ -9,7 +9,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 ## Implemented and Working Properly
 - `+` / `=` / numpad `+`: enter fullscreen
 - `-` / numpad `-`: exit fullscreen
-
+- `p` : pause game
 ## Implemented but Not Working Properly
 - **Obstacle safe zone and wrapping:** the safe zone uses grid distance, so it doesn't account for border wrapping. An obstacle can still appear just across a border when the snake is about to wrap.
 
