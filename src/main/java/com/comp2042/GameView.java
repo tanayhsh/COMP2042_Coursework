@@ -195,4 +195,10 @@ public class GameView {
         scoreLabel.setText("Score: " + game.getScorePoints());
     }
 
+    public void resetTurns(){
+        for (int[] coloumn : turnArray){
+            java.util.Arrays.fill(coloumn, 0);
+        }
+    }
+
 }
