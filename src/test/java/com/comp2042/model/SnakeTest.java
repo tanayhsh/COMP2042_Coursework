@@ -28,7 +28,7 @@ class SnakeTest {
     void movingLeftMovesHeadOneSpace(){
         Snake snake = new Snake(size, size, false, obstacle);
         assertEquals(new Point(10,10), snake.getHead());
-        snake.move('L');
+        snake.move(Direction.LEFT);
         assertEquals(new Point(11,10), snake.getBody().get(0));
         assertFalse(snake.isDead());
     }
@@ -37,7 +37,7 @@ class SnakeTest {
     void hittingWallWhenBorderOnKillSnake(){
         Snake snake = new Snake(size, size, false, obstacle);
         for (int i = 0; i < 11; i++){
-            snake.move('U');
+            snake.move(Direction.UP);
         }
         assertTrue(snake.isDead());
         assertEquals(new Point(10,0), snake.getHead());
@@ -47,7 +47,7 @@ class SnakeTest {
     void wrapsToOtherEdgeWhenNoBorder(){
         Snake snake = new Snake(size, size, true, obstacle);
         for (int i = 0; i < 11; i++){
-            snake.move('U');
+            snake.move(Direction.UP);
         }
         assertFalse(snake.isDead());
         assertEquals(new Point(10,19), snake.getHead());
@@ -57,7 +57,7 @@ class SnakeTest {
     void hittingObstacleKillSnake(){
         Snake snake = new Snake(size, size, false, obstacle);
         obstacle.getObstacles().add(new Point(9,10));
-        snake.move('L');
+        snake.move(Direction.LEFT);
         assertTrue(snake.isDead());
 
     }
@@ -67,7 +67,7 @@ class SnakeTest {
         Snake snake = new Snake(size, size, true, obstacle);
         obstacle.getObstacles().add(new Point(10,19));
         for (int i = 0; i < 11; i++){
-            snake.move('U');
+            snake.move(Direction.UP);
         }
         assertTrue(snake.isDead());
         assertEquals(new Point(10,0), snake.getHead());
@@ -77,9 +77,19 @@ class SnakeTest {
     void dyingDoesNotLeaveBodySegmentUnderHead() {
         obstacle.getObstacles().add(new Point(9, 10));
         Snake snake = new Snake(size, size, false, obstacle);
-        snake.move('L');
+        snake.move(Direction.LEFT);
         assertTrue(snake.isDead());
         assertFalse(snake.getBody().contains(snake.getHead()));
         assertEquals(1, snake.getBody().size());
+    }
+
+    @Test
+    void wrapsCorrectlyInALLDirections(){
+        Snake snake = new Snake(size, size, true, obstacle);
+        for(int i = 0; i < 11; i++){
+            snake.move(Direction.LEFT);
+        }
+        assertEquals(19, snake.getHead().x);
+        assertFalse(snake.isDead());
     }
 }
