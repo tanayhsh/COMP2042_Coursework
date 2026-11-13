@@ -63,3 +63,12 @@ https://github.com/tanayhsh/COMP2042_Coursework
 
 ## Unexpected Problems
 (none so far)
+
+### Package structure
+| Package | Responsibility | Classes |
+|---|---|---|
+| `com.comp2042` | Entry point | Main |
+| `com.comp2042.model` | Game logic and state, no JavaFX rendering | Snake, Game, Obstacle, CoinType |
+| `com.comp2042.model.coin` | Coin types and their points | Coin, GoldCoin, BlueCoin, RainbowCoin, SilverCoin |
+| `com.comp2042.view` | Drawing, images and windows | GameView, SpriteManager, ViewManager |
+| `com.comp2042.controller` | Input handling and game loop | GameController, MainMenuController |
