@@ -1,4 +1,8 @@
-package com.comp2042;
+package com.comp2042.model.coin;
+
+import com.comp2042.model.CoinType;
+import com.comp2042.model.Obstacle;
+import com.comp2042.model.Snake;
 
 import java.awt.*;
 import java.util.Random;
