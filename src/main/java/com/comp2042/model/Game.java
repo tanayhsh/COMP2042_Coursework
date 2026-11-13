@@ -15,17 +15,10 @@ public class Game {
     private boolean powerUp;
     private boolean noBorder;
 
-    public Game(int x, int y, boolean powerUp, char difficulty) {
-        if (difficulty == 'E') {
-            speed = 8.5;
-            noBorder = true;
-        } else if (difficulty == 'N') {
-            speed = 8.5;
-            noBorder = false;
-        } else if (difficulty == 'H') {
-            speed = 13;
-            noBorder = false;
-        }
+    public Game(int x, int y, boolean powerUp, Difficulty difficulty) {
+        speed = difficulty.getSpeed();
+        noBorder = difficulty.isNoBorder();
+
         this.powerUp = powerUp;
         width = x;
         height = y;

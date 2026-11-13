@@ -1,6 +1,7 @@
 package com.comp2042.controller;
 
 import com.comp2042.Main;
+import com.comp2042.model.Difficulty;
 import com.comp2042.model.Game;
 import com.comp2042.model.Obstacle;
 import com.comp2042.model.Snake;
@@ -18,7 +19,7 @@ public class MainMenuController {
     private static final int X_VALUE = 20;
     private static final int Y_VALUE = 20;
     private static final boolean POWER_UP = true;
-    private static final char DIFFICULTY = 'E';
+    private static final Difficulty DIFFICULTY = Difficulty.EASY;
 
     private Scene gameScene;
 
