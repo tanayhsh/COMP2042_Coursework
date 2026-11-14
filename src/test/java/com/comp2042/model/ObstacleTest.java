@@ -1,6 +1,7 @@
 package com.comp2042.model;
 
 import com.comp2042.model.coin.Coin;
+import com.comp2042.model.coin.RedCoin;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +17,7 @@ class ObstacleTest {
     private Obstacle spawn(int amount, Snake[] snakeOut){
         Obstacle obstacle = new Obstacle(size, size);
         Snake snake = new Snake(size, size, false, obstacle);
-        Coin coin = new Coin(size, size, snake,obstacle);
+        Coin coin = new RedCoin(size, size, snake,obstacle);
         obstacle.newObstacles(snake, coin, amount);
         if (snakeOut != null) snakeOut[0] = snake;
         return obstacle;

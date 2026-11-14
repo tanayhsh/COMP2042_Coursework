@@ -151,7 +151,7 @@ public class GameController {
         animation.stop();
 
         snake = new Snake(game.getWidth(), game.getHeight(), game.isNoBorder(), obstacle);
-        coin = new Coin(game.getWidth(), game.getHeight(), snake, obstacle);
+        coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
 
         animation.setRate(game.getSpeed());
         lastKey = KeyCode.LEFT;
@@ -199,10 +199,10 @@ public class GameController {
             } else if (ran == 4 && obstacle.getObstacles().size() == 0) {
                 coin = new SilverCoin(game.getWidth(), game.getHeight(), snake, obstacle);
             } else {
-                coin = new Coin(game.getWidth(), game.getHeight(), snake, obstacle);
+                coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
             }
         } else {
-            coin = new Coin(game.getWidth(), game.getHeight(), snake, obstacle);
+            coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
         }
     }
 
