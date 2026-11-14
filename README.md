@@ -21,6 +21,8 @@ https://github.com/tanayhsh/COMP2042_Coursework
 |---|---|---|
 | EntityManager | `com.comp2042.view.EntityManager` | Loads and holds all snake and coin images so model classes contain no JavaFX code |
 | CoinType | `com.comp2042.model.CoinType` | Enum identifying each coin kind so the view can choose the matching image |
+| Direction | `com.comp2042.model.Direction` | Enum for the four movement directions. Each value stores its x/y offset and the entity rotation angle, and `isOpposite()` detects reversals. Replaces the `'U'/'D'/'L'/'R'` chars and hard-coded degree values |
+| Difficulty | `com.comp2042.model.Difficulty` |  Enum for EASY, NORMAL and HARD. Each value stores its game speed and whether borders wrap. Replaces the `'E'/'N'/'H'` chars |
 
 ## Modified Java Classes
 
@@ -40,6 +42,11 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Snake | Removed all `Image`/`ImageView` fields and getters | makes Snake unit testable without JavaFX |
 | Coin, GoldCoin, BlueCoin, RainbowCoin, SilverCoin | Removed `Image` fields and `getImage()`; added `getType()` returning a `CoinType` | each image now loads once instead of on every coin spawn |
 | GameView | Uses `EntityManager` for all images | Rendering code now owns the visuals |
+| Snake | `move()` now takes a `Direction`; four near-identical `switch` cases (~50 lines) collapsed into one path; `borderControl()` renamed `isOutOfBounds()`; wrapping handled by a new `wrap()` method using `Math.floorMod` | DRY: movement logic exists once, so fixes apply to every direction; clearer names |
+| GameController | Four-way `if/else` on the key replaced by `snake.move(toDirection(key))` with a small `toDirection()` helper | Removes duplication; converts input to the model's own type at one point |
+| Game | Constructor takes a `Difficulty` instead of a `char`; the `if / else if` difficulty block replaced by reading speed and border rules from the enum | Type safety: invalid difficulties can't compile; settings live with the difficulty they belong to |
+| MainMenuController | `DIFFICULTY` constant is now `Difficulty.NORMAL` for exapmle| Follows the `Difficulty` refactor |
+| SnakeTest, GameTest | Updated to use `Direction` and `Difficulty`; added wrap-in-all-directions and difficulty tests | Tests modified to match new behaviour |
 
 ### Bugs fixed
 | Bug | Location | Cause | Fix |
@@ -60,6 +67,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Fullscreen hint said "Press ESC", which also returns to menu | `ViewManager.initGameStage()` | JavaFX default exit key clashed with the game's ESC | Hint now says "Press -"|
 | Final frame not drawn on wall/obstacle death | `GameController` timeline | Redraw skipped unless the snake hit itself | Always redraw |
 | Confusing scaling variable names | `GameView.scaleToFullscreen()` | `xScaling` used the screen height | Renamed to `heightScale`/`widthScale`, used `Math.min` |
+| Unknown difficulty left the game frozen | `Game` constructor | Difficulty was a `char`; any value other than `'E'`, `'N'` or `'H'` matched no branch, leaving `speed` at 0 so the snake never moved | Replaced with the `Difficulty` enum, so only valid difficulties can be passed in, and the compiler enforces it |
 
 ## Unexpected Problems
 (none so far)
@@ -72,3 +80,13 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | `com.comp2042.model.coin` | Coin types and their points | Coin, GoldCoin, BlueCoin, RainbowCoin, SilverCoin |
 | `com.comp2042.view` | Drawing, images and windows | GameView, SpriteManager, ViewManager |
 | `com.comp2042.controller` | Input handling and game loop | GameController, MainMenuController |
+
+### Testing
+| Test class | What it covers |
+|---|---|
+| SnakeTest | Starting position, movement, wall death, wrapping (all directions), obstacle death, wrap-onto-obstacle, no duplicate segment on death |
+| ObstacleTest | Obstacles stay inside the grid, never stack, respect the safe zone around the head, reset clears them |
+| GameTest | Coins needed win calculation, one deducted per obstacle, reset restores it, win detection, difficulty speed and border settings |
+| DirectionTest | Opposite directions detected, perpendicular and same directions are not opposite, each direction moves exactly one cell |
+
+All tests are run with `mvn test` or from IntelliJ (right-click `src/test/java` → Run 'All Tests').

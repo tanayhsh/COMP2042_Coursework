@@ -1,5 +1,6 @@
 package com.comp2042.controller;
 
+import com.comp2042.model.Direction;
 import com.comp2042.model.Game;
 import com.comp2042.model.Obstacle;
 import com.comp2042.model.Snake;
@@ -46,16 +47,7 @@ public class GameController {
         if (snake.isDead()) {
             return;
         } else {
-
-            if (key.equals(KeyCode.LEFT)) {
-                snake.move('L');
-            } else if (key.equals(KeyCode.RIGHT)) {
-                snake.move('R');
-            } else if (key.equals(KeyCode.UP)) {
-                snake.move('U');
-            } else if (key.equals(KeyCode.DOWN)) {
-                snake.move('D');
-            }
+            snake.move(toDirection(key));
 
             if (!snake.isDead() && snake.ateCoin(coin)) {
                 powerCoin();
@@ -77,6 +69,19 @@ public class GameController {
             gameView.gameWon();
             gameView.gameOver(snake);
             gameView.updateScoreLabel();
+        }
+    }
+    /** converts direction key into movement key */
+    private static Direction toDirection(KeyCode code){
+        switch (code){
+            case UP:
+                return Direction.UP;
+            case DOWN:
+                return Direction.DOWN;
+            case RIGHT:
+                return Direction.RIGHT;
+            default:
+                return Direction.LEFT;
         }
     }
 
