@@ -19,5 +19,10 @@ public class BlueCoin extends Coin{
     public CoinType getType() {
         return CoinType.BLUE;
     }
+
+    @Override
+    public void applyEffect(CoinEffectContext context){
+        context.getSnake().ignoreBorders(true);
+    }
 }
 

@@ -17,7 +17,7 @@ public abstract class Coin {
         do {
             p = new Point(random.nextInt(width), random.nextInt(height));
         } while (snake.getHead().equals(p)
-                || snake.getBody().equals(p)
+                || snake.getBody().contains(p)
                 || obstacle.getObstacles().contains(p));
         pos = p;
     }
@@ -29,4 +29,7 @@ public abstract class Coin {
     public abstract int getPoints();
 
     public abstract CoinType getType();
+
+    public void applyEffect(CoinEffectContext context){
+    }
 }

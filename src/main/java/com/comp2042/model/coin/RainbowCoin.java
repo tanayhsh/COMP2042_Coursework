@@ -23,4 +23,9 @@ public class RainbowCoin extends Coin{
     public double getSpeedBonus(){
         return 5;
     }
+
+    @Override
+    public void applyEffect(CoinEffectContext context){
+        context.setSpeedBonus(getSpeedBonus());
+    }
 }

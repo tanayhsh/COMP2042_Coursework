@@ -1,4 +1,4 @@
-package com.comp2042.model;
+package com.comp2042.model.coin;
 
 import com.comp2042.model.CoinType;
 import com.comp2042.model.Obstacle;
@@ -6,8 +6,6 @@ import com.comp2042.model.Snake;
 
 import java.awt.Point;
 
-import com.comp2042.model.coin.*;
-import javafx.css.Size;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
