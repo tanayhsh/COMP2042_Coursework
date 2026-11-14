@@ -4,19 +4,20 @@ import com.comp2042.model.CoinType;
 import com.comp2042.model.Obstacle;
 import com.comp2042.model.Snake;
 
-public class GoldCoin extends Coin {
+public class GoldCoin extends Coin{
 
-    public GoldCoin(int x, int y, Snake snake, Obstacle obstacle) {
-        super(x, y, snake, obstacle);
-    }
-
-    public int getPoints() {
-        int points = 15;
-        return points;
+    public GoldCoin(int width, int height, Snake snake, Obstacle obstacle){
+        super(width, height, snake, obstacle);
     }
 
     @Override
-    public CoinType getType(){
+    public int getPoints(){
+        return 15;
+    }
+
+    @Override
+    public CoinType getType() {
         return CoinType.GOLD;
     }
 }
+

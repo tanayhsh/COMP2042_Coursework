@@ -19,9 +19,9 @@ public class Obstacle {
        this.y = y;
     }
 
-    public void newObstacles(Snake snake, Coin coin, int amount) {
+    public int newObstacles(Snake snake, Coin coin, int amount) {
         if (obstacles.size() > 50) {
-            return;
+            return 0;
         }
         Random rnd = new Random();
         Point p;
@@ -35,6 +35,7 @@ public class Obstacle {
                     || tooCLoseToHead(p, snake.getHead()));
             obstacles.add(p);
         }
+        return amount;
     }
 
     private boolean tooCLoseToHead(Point p, Point head){

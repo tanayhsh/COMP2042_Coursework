@@ -4,7 +4,10 @@ import com.comp2042.model.Direction;
 import com.comp2042.model.Game;
 import com.comp2042.model.Obstacle;
 import com.comp2042.model.Snake;
-import com.comp2042.model.coin.*;
+import com.comp2042.model.coin.Coin;
+import com.comp2042.model.coin.CoinEffectContext;
+import com.comp2042.model.coin.CoinFactory;
+import com.comp2042.model.coin.RedCoin;
 import com.comp2042.view.GameView;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -14,9 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.Random;
-
-public class GameController {
+public class GameController implements CoinEffectContext{
     private Snake snake;
     private Coin coin;
     private GameView gameView;
@@ -29,12 +30,15 @@ public class GameController {
     private boolean keyPressed = false;
     private boolean paused = false;
 
+    private final CoinFactory coinFactory;
+
     public GameController(Snake snake, Coin coin, Game game, GameView gameView, Obstacle obstacle, Stage stage) {
         this.snake = snake;
         this.coin = coin;
         this.gameView = gameView;
         this.game = game;
         this.stage = stage;
+        this.coinFactory = new CoinFactory(game.getDifficulty());
 
         this.obstacle = obstacle;
         animation.setCycleCount(Animation.INDEFINITE);
@@ -151,7 +155,7 @@ public class GameController {
         animation.stop();
 
         snake = new Snake(game.getWidth(), game.getHeight(), game.isNoBorder(), obstacle);
-        coin = new Coin(game.getWidth(), game.getHeight(), snake, obstacle);
+        coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
 
         animation.setRate(game.getSpeed());
         lastKey = KeyCode.LEFT;
@@ -173,37 +177,13 @@ public class GameController {
     private void powerCoin() {
         animation.setRate(game.getSpeed());
         snake.ignoreBorders(false);
-        if (coin.getClass().equals(RainbowCoin.class)) {
-            RainbowCoin tempCoin = (RainbowCoin) coin;
-            animation.setRate(game.getSpeed() + tempCoin.getSpeedBonus());
-        } else if (coin.getClass().equals(SilverCoin.class)){
-            Random rnd = new Random();
-            obstacle.newObstacles(snake, coin, rnd.nextInt(game.getWidth() * game.getHeight()/ 20) +3);
-            game.decMaxScore(obstacle.getObstacles().size());
-        } else if (coin.getClass().equals(BlueCoin.class)) {
-            snake.ignoreBorders(true);
-        }
+
+        coin.applyEffect(this);
         game.addPoints(coin.getPoints());
     }
 
     private void newCoin() {
-        if (game.isPowerUp()) {
-            Random rnd = new Random();
-            int ran = rnd.nextInt(12);
-            if (ran == 1) {
-                coin = new GoldCoin(game.getWidth(), game.getHeight(), snake, obstacle);
-            } else if (ran == 2) {                                                          // changed to ran == 2 so coins can be selected properly
-                coin = new RainbowCoin(game.getWidth(), game.getHeight(), snake, obstacle);
-            } else if (ran == 3) {
-                coin = new BlueCoin(game.getWidth(), game.getHeight(), snake, obstacle);
-            } else if (ran == 4 && obstacle.getObstacles().size() == 0) {
-                coin = new SilverCoin(game.getWidth(), game.getHeight(), snake, obstacle);
-            } else {
-                coin = new Coin(game.getWidth(), game.getHeight(), snake, obstacle);
-            }
-        } else {
-            coin = new Coin(game.getWidth(), game.getHeight(), snake, obstacle);
-        }
+        coin = coinFactory.create(game.getWidth(), game.getHeight(), snake, obstacle, game.isPowerUp());
     }
 
     private void togglePaused(){
@@ -218,5 +198,25 @@ public class GameController {
             animation.pause();
         }
         gameView.showPaused(paused);
+    }
+
+    @Override
+    public Snake getSnake() {
+        return snake;
+    }
+
+    @Override
+    public Game getGame() {
+        return game;
+    }
+
+    @Override
+    public Obstacle getObstacle() {
+        return obstacle;
+    }
+
+    @Override
+    public void setSpeedBonus(double bonus){
+        animation.setRate(game.getSpeed() + bonus);
     }
 }

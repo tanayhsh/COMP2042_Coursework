@@ -14,16 +14,18 @@ public class Game {
     private double speed;
     private boolean powerUp;
     private boolean noBorder;
+    private final Difficulty difficulty;
 
     public Game(int x, int y, boolean powerUp, Difficulty difficulty) {
-        speed = difficulty.getSpeed();
-        noBorder = difficulty.isNoBorder();
-
+        this.difficulty = difficulty;
         this.powerUp = powerUp;
         width = x;
         height = y;
         initialMaxScore = x * y - 2;
         maxScore = initialMaxScore;
+
+        speed = difficulty.getSpeed();
+        noBorder = difficulty.isNoBorder();
 
         if (height > 50) {
             cellSize = 10;
@@ -88,5 +90,9 @@ public class Game {
 
     public int getMaxScore() {
         return maxScore;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
     }
 }

@@ -6,6 +6,7 @@ import com.comp2042.model.Game;
 import com.comp2042.model.Obstacle;
 import com.comp2042.model.Snake;
 import com.comp2042.model.coin.Coin;
+import com.comp2042.model.coin.RedCoin;
 import com.comp2042.view.GameView;
 import com.comp2042.view.ViewManager;
 import javafx.geometry.Insets;
@@ -39,7 +40,7 @@ public class MainMenuController {
         Game game = new Game(X_VALUE, Y_VALUE, POWER_UP, DIFFICULTY);
         Obstacle obstacle = new Obstacle(game.getWidth(), game.getHeight());
         Snake snake = new Snake(game.getWidth(), game.getHeight(), game.isNoBorder(), obstacle);
-        Coin coin = new Coin(game.getWidth(), game.getHeight(), snake, obstacle);
+        Coin coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
 
         GameView gameView = new GameView(game);
         GameController controller = new GameController(snake, coin, game, gameView, obstacle, gameStage);
