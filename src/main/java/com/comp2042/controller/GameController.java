@@ -25,8 +25,8 @@ public class GameController implements CoinEffectContext{
     private Stage stage;
     private Obstacle obstacle;
 
-    public static KeyCode key = KeyCode.LEFT;
-    public static KeyCode lastKey = KeyCode.LEFT;
+    private KeyCode key = KeyCode.LEFT;
+    private KeyCode lastKey = KeyCode.LEFT;
     private boolean keyPressed = false;
     private boolean paused = false;
 
@@ -100,7 +100,7 @@ public class GameController implements CoinEffectContext{
             lastKey = key;
             key = event.getCode();
             keyPressed = true;
-            gameView.turnDir(snake);
+            gameView.turnDir(snake, lastKey, key);
         }
 
         if (event.getCode().equals(KeyCode.P)) {
@@ -158,9 +158,7 @@ public class GameController implements CoinEffectContext{
         coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
 
         animation.setRate(game.getSpeed());
-        lastKey = KeyCode.LEFT;
         gameView.resetTurns();
-        key = KeyCode.LEFT;
         keyPressed = false;
         paused = false;
         gameView.showPaused(false);

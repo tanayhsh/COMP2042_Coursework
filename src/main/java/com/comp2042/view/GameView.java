@@ -37,11 +37,12 @@ public class GameView {
     private double initY;
     private double fullScale = 1;
     private boolean fullsize = false;
-    private int[][] turnArray = new int[MainMenuController.getxValue()][MainMenuController.getyValue()];
+    private final int[][] turnArray;
     private final EntityManager entity = new EntityManager();
 
     public GameView(Game game) {
         this.game = game;
+        this.turnArray =new int[game.getWidth()][game.getHeight()];
     }
 
     public void makeScene(Scene scene, Snake snake, Coin coin, Obstacle obstacle) {
@@ -170,16 +171,20 @@ public class GameView {
         gc.drawImage(rotatedImage, (point.x * game.getCellSize()) * fullScale, (point.y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale, game.getCellSize() * fullScale);
     }
 
-    public void turnDir(Snake snake) {
-        if ((GameController.lastKey == KeyCode.LEFT && GameController.key == KeyCode.UP) || (GameController.lastKey == KeyCode.DOWN && GameController.key == KeyCode.RIGHT)) {
-            turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 2;
-        } else if ((GameController.lastKey == KeyCode.LEFT && GameController.key == KeyCode.DOWN) || (GameController.lastKey == KeyCode.UP && GameController.key == KeyCode.RIGHT)) {
-            turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 3;
-        } else if ((GameController.lastKey == KeyCode.RIGHT && GameController.key == KeyCode.UP) || (GameController.lastKey == KeyCode.DOWN && GameController.key == KeyCode.LEFT)) {
-            turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 1;
-        } else if ((GameController.lastKey == KeyCode.UP && GameController.key == KeyCode.LEFT) || (GameController.lastKey == KeyCode.RIGHT && GameController.key == KeyCode.DOWN)) {
-            turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 4;
-        } else turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 0;
+    public void turnDir(Snake snake,  KeyCode from, KeyCode to) {
+
+        int x = snake.getHead().x;
+        int y = snake.getHead().y;
+        
+        if ((from == KeyCode.LEFT && to == KeyCode.UP) || (from == KeyCode.DOWN && to == KeyCode.RIGHT)) {
+            turnArray[x][y] = 2;
+        } else if ((from == KeyCode.LEFT && to == KeyCode.DOWN) || (from == KeyCode.UP && to == KeyCode.RIGHT)) {
+            turnArray[x][y] = 3;
+        } else if ((from == KeyCode.RIGHT && to == KeyCode.UP) || (from == KeyCode.DOWN && to == KeyCode.LEFT)) {
+            turnArray[x][y] = 1;
+        } else if ((from == KeyCode.UP && to == KeyCode.LEFT) || (from == KeyCode.RIGHT && to == KeyCode.DOWN)) {
+            turnArray[x][y] = 4;
+        } else turnArray[x][y] = 0;
     }
 
     public void gameOver(Snake snake) {
