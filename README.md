@@ -89,6 +89,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | `P` could pause but not resume; any arrow resumed and turned the snake | `GameController.handle()` | `P` called `animation.stop()` with no toggle | `P` toggles via `pause()`/`play()`, shows PAUSED, and blocks input while paused |
 | Coins-to-win reduced by total obstacles, not obstacles added | `GameController.powerCoin()` | Passed `getObstacles().size()`; only correct because silver needs an empty board | `newObstacles()` returns how many it added, and only that is subtracted |
 | Missing menu file caused a confusing crash | `ViewManager.initializeMainMenu()` | Load errors were printed and ignored, leaving `root` null, which crashed later in `new Scene(root)` | Throw an `IllegalStateException` naming the missing file |
+| Head looked detached from the body after dying | `Snake.move()` | Direction was updated before the death check, so the head was drawn facing the obstacle even though it never moved | Restore the previous direction when the head is moved back on death |
 
 ### Package structure
 | Package | Responsibility | Classes |
