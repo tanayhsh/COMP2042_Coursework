@@ -8,26 +8,33 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class ViewManager {
 
-    private Stage primaryStage = new Stage();
+    private static final String mainMenuFXML = "/resources/views/MainMenu.fxml";
+
+    private final Stage primaryStage;
     private AnchorPane root;
 
     private Stage gameStage;
 
     private Image snakeLogo = new Image("resources/views/res/SnakeLogoWhite.png");
 
-    public ViewManager() {
+    public ViewManager(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 
     public void initializeMainMenu() {
+        URL location = ViewManager.class.getResource(mainMenuFXML);
+        if (location == null){
+            throw new IllegalStateException("Main menu FXML not found at " + mainMenuFXML);
+        }
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/resources/views/MainMenu.fxml"));
+            FXMLLoader loader = new FXMLLoader(location);
             root = loader.load();
         } catch (IOException exception) {
-            exception.printStackTrace();
+            throw new IllegalStateException("Could not load main menu form " + mainMenuFXML);
         }
 
         Scene mainScene = new Scene(root);
