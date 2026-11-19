@@ -59,6 +59,11 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | GameView | PAUSED label with `showPaused()` | Pause feedback |
 | Obstacle | `newObstacles()` returns how many obstacles it added | Lets callers reduce coins-to-win by exactly the number added |
 | Game | Stores its `Difficulty` with `getDifficulty()` | Lets `CoinFactory` set spawn weights per difficulty |
+| GameController | `key`/`lastKey` changed from `public static` to private per-game fields; passed to `GameView.turnDir()` as parameters | Encapsulation: removes shared global state that any class could change |
+| GameView | `turnDir()` takes the old and new direction as parameters; `turnArray` sized from `Game`; all fields private; new `attachTo(StackPane)`; fullscreen label sizing moved into `scaleToFullscreen()`; redundant `setFont` calls removed; snake body fetched once per frame | Removes the view's dependency on controllers; only GameView touches its own nodes; performance |
+| MainMenuController | Uses `gameView.attachTo()`; unused `getxValue()`/`getyValue()` removed | Follows GameView encapsulation |
+| ViewManager | Uses the `Stage` passed to `Main.start()`; throws a clear `IllegalStateException` if the menu FXML is missing; FXML path is a constant | Uses JavaFX's window as intended; fails clearly instead of a later NullPointerException |
+| Main | Passes its `Stage` to `ViewManager` | Follows ViewManager change |
 
 ### Bugs fixed
 | Bug | Location | Cause | Fix |
@@ -83,6 +88,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Game kept running after a win, showing YOU WON and GAME OVER together | `GameController` timeline | Loop never stopped on a win; label only updated on the next tick | Stop the animation and show the win label immediately; ignore arrows once the game has ended |
 | `P` could pause but not resume; any arrow resumed and turned the snake | `GameController.handle()` | `P` called `animation.stop()` with no toggle | `P` toggles via `pause()`/`play()`, shows PAUSED, and blocks input while paused |
 | Coins-to-win reduced by total obstacles, not obstacles added | `GameController.powerCoin()` | Passed `getObstacles().size()`; only correct because silver needs an empty board | `newObstacles()` returns how many it added, and only that is subtracted |
+| Missing menu file caused a confusing crash | `ViewManager.initializeMainMenu()` | Load errors were printed and ignored, leaving `root` null, which crashed later in `new Scene(root)` | Throw an `IllegalStateException` naming the missing file |
 
 ### Package structure
 | Package | Responsibility | Classes |
