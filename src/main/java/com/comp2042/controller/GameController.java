@@ -109,22 +109,15 @@ public class GameController implements CoinEffectContext{
 
         if (event.getCode().equals(KeyCode.TAB)) {
             reset();
-            gameView.scoreLabel.setText("Score: " + game.getScorePoints());
         }
 
         KeyCode code = event.getCode();
         if (code == KeyCode.PLUS || code == KeyCode.ADD || code == KeyCode.EQUALS){
             gameView.scaleToFullscreen(true, stage, obstacle, snake, coin);
-            gameView.gameOverLabel.setStyle("-fx-font-size: 50;");
-            gameView.gameWonLabel.setStyle("-fx-font-size: 50;");
-            gameView.scoreLabel.setStyle("-fx-font-size: 35;");
         }
 
         if (code == KeyCode.MINUS || code == KeyCode.SUBTRACT){
             gameView.scaleToFullscreen(false, stage, obstacle, snake, coin);
-            gameView.gameOverLabel.setStyle("-fx-font-size: 15;");
-            gameView.gameWonLabel.setStyle("-fx-font-size: 15;");
-            gameView.scoreLabel.setStyle("-fx-font-size: 15;");
         }
 
         if (event.getCode().equals(KeyCode.ESCAPE)) {

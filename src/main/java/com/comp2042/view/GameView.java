@@ -1,11 +1,11 @@
 package com.comp2042.view;
 
-import com.comp2042.controller.GameController;
-import com.comp2042.controller.MainMenuController;
 import com.comp2042.model.Game;
 import com.comp2042.model.Obstacle;
 import com.comp2042.model.Snake;
 import com.comp2042.model.coin.Coin;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
@@ -22,13 +23,13 @@ import java.awt.*;
 
 public class GameView {
 
-    public Canvas gridCanvas;
-    public GraphicsContext gc;
+    private Canvas gridCanvas;
+    private GraphicsContext gc;
 
-    public Label gameOverLabel;
-    public Label gameWonLabel;
-    public Label scoreLabel;
-    public Label pausedLable;
+    private Label gameOverLabel;
+    private Label gameWonLabel;
+    private Label scoreLabel;
+    private Label pausedLabel;
     private boolean gameOverVis = false;
     private boolean gameWonVis = false;
 
@@ -70,13 +71,13 @@ public class GameView {
         scoreLabel.setFont(new Font("Arial", 20));
         scoreLabel.setVisible(true);
 
-        pausedLable = new Label("Paused");
-        pausedLable.setFont(new Font("Ariel", 20));
-        pausedLable.setVisible(false);
+        pausedLabel = new Label("Paused");
+        pausedLabel.setFont(new Font("Ariel", 20));
+        pausedLabel.setVisible(false);
     }
 
     public void showPaused(boolean paused){
-        pausedLable.setVisible(paused);
+        pausedLabel.setVisible(paused);
     }
 
     public void scaleToFullscreen(boolean fullScreen, Stage primaryStage, Obstacle obstacle, Snake snake, Coin coin) {
@@ -97,8 +98,12 @@ public class GameView {
             fullsize = false;
         }
 
-        gameOverLabel.setFont(new Font("Arial", 25 * fullScale));
-        gameWonLabel.setFont(new Font("Arial", 25 * fullScale));
+        String bigLabel = fullScreen ? "fx-font-size 50;" : "fx-font-size-15";
+        String scoreSize = fullScreen ? "fx-font-size 35;" : "fx-font-size-15";
+        gameOverLabel.setStyle(bigLabel);
+        gameWonLabel.setStyle(bigLabel);
+        scoreLabel.setStyle(scoreSize);
+
         drawGrid(coin, snake, obstacle);
     }
 
@@ -217,4 +222,13 @@ public class GameView {
         }
     }
 
+    public void attachTo(StackPane pane){
+        pane.getChildren().addAll(gridCanvas, gameOverLabel, gameWonLabel, scoreLabel, pausedLabel);
+        pane.setPadding(new Insets(20));
+        StackPane.setAlignment(gameOverLabel, Pos.TOP_CENTER);
+        StackPane.setAlignment(gameWonLabel, Pos.TOP_CENTER);
+        StackPane.setAlignment(scoreLabel, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(pausedLabel, Pos.CENTER);
+
+    }
 }
