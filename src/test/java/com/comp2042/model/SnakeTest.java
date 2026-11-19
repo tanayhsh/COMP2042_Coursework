@@ -92,4 +92,14 @@ class SnakeTest {
         assertEquals(19, snake.getHead().x);
         assertFalse(snake.isDead());
     }
+
+    @Test
+    void headStaysConnectedToSnakeAfterDeath(){
+        obstacle.getObstacles().add(new Point(9, 11));
+        Snake snake = new Snake(size, size, false, obstacle);
+        snake.move(Direction.DOWN);
+        snake.move(Direction.LEFT);
+        assertTrue(snake.isDead());
+        assertEquals(Direction.DOWN.getAngle(), snake.getSnakeDir());
+    }
 }

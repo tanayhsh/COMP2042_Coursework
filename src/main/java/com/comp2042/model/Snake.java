@@ -32,6 +32,7 @@ public class Snake {
      */
     public void move(Direction dir){
         Point previous = new Point(head);
+        int previousDir = snakeDir;
         body.add(new Point(head));
         snakeDir = dir.getAngle();
         head.translate(dir.getDx(), dir.getDy());
@@ -55,7 +56,7 @@ public class Snake {
         // added at the start of this move so there's no overlap
         if (dead && head.equals(previous)){
             body.remove(body.size() - 1);
-
+            snakeDir = previousDir;
         }
 
         if (body.size() > 4 && hitSelf() && !body.get(0).equals(head)) {
