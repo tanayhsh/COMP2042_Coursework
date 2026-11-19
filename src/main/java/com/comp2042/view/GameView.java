@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import java.util.List;
 
 import java.awt.*;
 
@@ -113,10 +114,9 @@ public class GameView {
 
         gc.drawImage(entity.getCoinImages(coin.getType()), (coin.getPos().x * game.getCellSize()) * fullScale, (coin.getPos().y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale - 3 * fullScale, game.getCellSize() * fullScale - 3 * fullScale);
 
-        int bodyIndex = 0;
-        for (Point point : snake.getBody()) {
-            drawBody(snake, point, bodyIndex);
-            bodyIndex++;
+        List<Point> body = snake.getBody();
+        for (int i = 0; i < body.size(); i++){
+            drawBody(snake, body, body.get(i), i);
         }
 
         drawHead(snake);
@@ -135,20 +135,20 @@ public class GameView {
         gc.drawImage(rotatedImage, (snake.getHead().x * game.getCellSize()) * fullScale, (snake.getHead().y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale, game.getCellSize() * fullScale);
     }
 
-    private void drawBody(Snake snake, Point point, int index) {
+    private void drawBody(Snake snake, List<Point> body, Point point, int index) {
         Image rotatedImage;
-        if (snake.getBody().size() <= 1) {
+        if (body.size() <= 1) {
             entity.getTail().setRotate(snake.getSnakeDir());
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
             rotatedImage = entity.getTail().snapshot(params, null);
         } else if (index == 0) {
             int rotateTail;
-            if (snake.getBody().get(1).getX() == snake.getBody().get(0).getX() && snake.getBody().get(1).getY() == snake.getBody().get(0).getY() - 1) {
+            if (body.get(1).getX() == body.get(0).getX() && body.get(1).getY() == body.get(0).getY() - 1) {
                 rotateTail = 0;
-            } else if (snake.getBody().get(1).getX() == snake.getBody().get(0).getX() && snake.getBody().get(1).getY() == snake.getBody().get(0).getY() + 1) {
+            } else if (body.get(1).getX() == body.get(0).getX() && body.get(1).getY() == body.get(0).getY() + 1) {
                 rotateTail = 180;
-            } else if (snake.getBody().get(1).getX() == snake.getBody().get(0).getX() - 1 && snake.getBody().get(1).getY() == snake.getBody().get(0).getY()) {
+            } else if (body.get(1).getX() == body.get(0).getX() - 1 && body.get(1).getY() == body.get(0).getY()) {
                 rotateTail = 270;
             } else {
                 rotateTail = 90;
@@ -157,8 +157,8 @@ public class GameView {
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
             rotatedImage = entity.getTail().snapshot(params, null);
-        } else if (index > 0 && (turnArray[(int) snake.getBody().get(index).getX()][(int) snake.getBody().get(index).getY()] != 0)) {
-            entity.getTurn().setRotate(90 * turnArray[(int) snake.getBody().get(index).getX()][(int) snake.getBody().get(index).getY()]);
+        } else if (index > 0 && (turnArray[(int) body.get(index).getX()][(int) body.get(index).getY()] != 0)) {
+            entity.getTurn().setRotate(90 * turnArray[(int) body.get(index).getX()][(int) body.get(index).getY()]);
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
             rotatedImage = entity.getTurn().snapshot(params, null);
@@ -169,8 +169,8 @@ public class GameView {
             rotatedImage = entity.getBody().snapshot(params, null);
         }
 
-        if (turnArray[(int) snake.getBody().get(0).getX()][(int) snake.getBody().get(0).getY()] != 0) {
-            turnArray[(int) snake.getBody().get(0).getX()][(int) snake.getBody().get(0).getY()] = 0;
+        if (turnArray[(int) body.get(0).getX()][(int) body.get(0).getY()] != 0) {
+            turnArray[(int) body.get(0).getX()][(int) body.get(0).getY()] = 0;
         }
 
         gc.drawImage(rotatedImage, (point.x * game.getCellSize()) * fullScale, (point.y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale, game.getCellSize() * fullScale);
