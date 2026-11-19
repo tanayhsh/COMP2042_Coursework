@@ -1,11 +1,11 @@
 package com.comp2042.view;
 
-import com.comp2042.controller.GameController;
-import com.comp2042.controller.MainMenuController;
 import com.comp2042.model.Game;
 import com.comp2042.model.Obstacle;
 import com.comp2042.model.Snake;
 import com.comp2042.model.coin.Coin;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -13,22 +13,24 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import java.util.List;
 
 import java.awt.*;
 
 public class GameView {
 
-    public Canvas gridCanvas;
-    public GraphicsContext gc;
+    private Canvas gridCanvas;
+    private GraphicsContext gc;
 
-    public Label gameOverLabel;
-    public Label gameWonLabel;
-    public Label scoreLabel;
-    public Label pausedLable;
+    private Label gameOverLabel;
+    private Label gameWonLabel;
+    private Label scoreLabel;
+    private Label pausedLabel;
     private boolean gameOverVis = false;
     private boolean gameWonVis = false;
 
@@ -37,11 +39,12 @@ public class GameView {
     private double initY;
     private double fullScale = 1;
     private boolean fullsize = false;
-    private int[][] turnArray = new int[MainMenuController.getxValue()][MainMenuController.getyValue()];
+    private final int[][] turnArray;
     private final EntityManager entity = new EntityManager();
 
     public GameView(Game game) {
         this.game = game;
+        this.turnArray =new int[game.getWidth()][game.getHeight()];
     }
 
     public void makeScene(Scene scene, Snake snake, Coin coin, Obstacle obstacle) {
@@ -69,13 +72,13 @@ public class GameView {
         scoreLabel.setFont(new Font("Arial", 20));
         scoreLabel.setVisible(true);
 
-        pausedLable = new Label("Paused");
-        pausedLable.setFont(new Font("Ariel", 20));
-        pausedLable.setVisible(false);
+        pausedLabel = new Label("Paused");
+        pausedLabel.setFont(new Font("Ariel", 20));
+        pausedLabel.setVisible(false);
     }
 
     public void showPaused(boolean paused){
-        pausedLable.setVisible(paused);
+        pausedLabel.setVisible(paused);
     }
 
     public void scaleToFullscreen(boolean fullScreen, Stage primaryStage, Obstacle obstacle, Snake snake, Coin coin) {
@@ -96,8 +99,12 @@ public class GameView {
             fullsize = false;
         }
 
-        gameOverLabel.setFont(new Font("Arial", 25 * fullScale));
-        gameWonLabel.setFont(new Font("Arial", 25 * fullScale));
+        String bigLabel = fullScreen ? "fx-font-size 50;" : "fx-font-size-15";
+        String scoreSize = fullScreen ? "fx-font-size 35;" : "fx-font-size-15";
+        gameOverLabel.setStyle(bigLabel);
+        gameWonLabel.setStyle(bigLabel);
+        scoreLabel.setStyle(scoreSize);
+
         drawGrid(coin, snake, obstacle);
     }
 
@@ -107,10 +114,9 @@ public class GameView {
 
         gc.drawImage(entity.getCoinImages(coin.getType()), (coin.getPos().x * game.getCellSize()) * fullScale, (coin.getPos().y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale - 3 * fullScale, game.getCellSize() * fullScale - 3 * fullScale);
 
-        int bodyIndex = 0;
-        for (Point point : snake.getBody()) {
-            drawBody(snake, point, bodyIndex);
-            bodyIndex++;
+        List<Point> body = snake.getBody();
+        for (int i = 0; i < body.size(); i++){
+            drawBody(snake, body, body.get(i), i);
         }
 
         drawHead(snake);
@@ -129,20 +135,20 @@ public class GameView {
         gc.drawImage(rotatedImage, (snake.getHead().x * game.getCellSize()) * fullScale, (snake.getHead().y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale, game.getCellSize() * fullScale);
     }
 
-    private void drawBody(Snake snake, Point point, int index) {
+    private void drawBody(Snake snake, List<Point> body, Point point, int index) {
         Image rotatedImage;
-        if (snake.getBody().size() <= 1) {
+        if (body.size() <= 1) {
             entity.getTail().setRotate(snake.getSnakeDir());
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
             rotatedImage = entity.getTail().snapshot(params, null);
         } else if (index == 0) {
             int rotateTail;
-            if (snake.getBody().get(1).getX() == snake.getBody().get(0).getX() && snake.getBody().get(1).getY() == snake.getBody().get(0).getY() - 1) {
+            if (body.get(1).getX() == body.get(0).getX() && body.get(1).getY() == body.get(0).getY() - 1) {
                 rotateTail = 0;
-            } else if (snake.getBody().get(1).getX() == snake.getBody().get(0).getX() && snake.getBody().get(1).getY() == snake.getBody().get(0).getY() + 1) {
+            } else if (body.get(1).getX() == body.get(0).getX() && body.get(1).getY() == body.get(0).getY() + 1) {
                 rotateTail = 180;
-            } else if (snake.getBody().get(1).getX() == snake.getBody().get(0).getX() - 1 && snake.getBody().get(1).getY() == snake.getBody().get(0).getY()) {
+            } else if (body.get(1).getX() == body.get(0).getX() - 1 && body.get(1).getY() == body.get(0).getY()) {
                 rotateTail = 270;
             } else {
                 rotateTail = 90;
@@ -151,8 +157,8 @@ public class GameView {
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
             rotatedImage = entity.getTail().snapshot(params, null);
-        } else if (index > 0 && (turnArray[(int) snake.getBody().get(index).getX()][(int) snake.getBody().get(index).getY()] != 0)) {
-            entity.getTurn().setRotate(90 * turnArray[(int) snake.getBody().get(index).getX()][(int) snake.getBody().get(index).getY()]);
+        } else if (index > 0 && (turnArray[(int) body.get(index).getX()][(int) body.get(index).getY()] != 0)) {
+            entity.getTurn().setRotate(90 * turnArray[(int) body.get(index).getX()][(int) body.get(index).getY()]);
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
             rotatedImage = entity.getTurn().snapshot(params, null);
@@ -163,23 +169,27 @@ public class GameView {
             rotatedImage = entity.getBody().snapshot(params, null);
         }
 
-        if (turnArray[(int) snake.getBody().get(0).getX()][(int) snake.getBody().get(0).getY()] != 0) {
-            turnArray[(int) snake.getBody().get(0).getX()][(int) snake.getBody().get(0).getY()] = 0;
+        if (turnArray[(int) body.get(0).getX()][(int) body.get(0).getY()] != 0) {
+            turnArray[(int) body.get(0).getX()][(int) body.get(0).getY()] = 0;
         }
 
         gc.drawImage(rotatedImage, (point.x * game.getCellSize()) * fullScale, (point.y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale, game.getCellSize() * fullScale);
     }
 
-    public void turnDir(Snake snake) {
-        if ((GameController.lastKey == KeyCode.LEFT && GameController.key == KeyCode.UP) || (GameController.lastKey == KeyCode.DOWN && GameController.key == KeyCode.RIGHT)) {
-            turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 2;
-        } else if ((GameController.lastKey == KeyCode.LEFT && GameController.key == KeyCode.DOWN) || (GameController.lastKey == KeyCode.UP && GameController.key == KeyCode.RIGHT)) {
-            turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 3;
-        } else if ((GameController.lastKey == KeyCode.RIGHT && GameController.key == KeyCode.UP) || (GameController.lastKey == KeyCode.DOWN && GameController.key == KeyCode.LEFT)) {
-            turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 1;
-        } else if ((GameController.lastKey == KeyCode.UP && GameController.key == KeyCode.LEFT) || (GameController.lastKey == KeyCode.RIGHT && GameController.key == KeyCode.DOWN)) {
-            turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 4;
-        } else turnArray[(int) snake.getHead().getX()][(int) snake.getHead().getY()] = 0;
+    public void turnDir(Snake snake,  KeyCode from, KeyCode to) {
+
+        int x = snake.getHead().x;
+        int y = snake.getHead().y;
+        
+        if ((from == KeyCode.LEFT && to == KeyCode.UP) || (from == KeyCode.DOWN && to == KeyCode.RIGHT)) {
+            turnArray[x][y] = 2;
+        } else if ((from == KeyCode.LEFT && to == KeyCode.DOWN) || (from == KeyCode.UP && to == KeyCode.RIGHT)) {
+            turnArray[x][y] = 3;
+        } else if ((from == KeyCode.RIGHT && to == KeyCode.UP) || (from == KeyCode.DOWN && to == KeyCode.LEFT)) {
+            turnArray[x][y] = 1;
+        } else if ((from == KeyCode.UP && to == KeyCode.LEFT) || (from == KeyCode.RIGHT && to == KeyCode.DOWN)) {
+            turnArray[x][y] = 4;
+        } else turnArray[x][y] = 0;
     }
 
     public void gameOver(Snake snake) {
@@ -212,4 +222,13 @@ public class GameView {
         }
     }
 
+    public void attachTo(StackPane pane){
+        pane.getChildren().addAll(gridCanvas, gameOverLabel, gameWonLabel, scoreLabel, pausedLabel);
+        pane.setPadding(new Insets(20));
+        StackPane.setAlignment(gameOverLabel, Pos.TOP_CENTER);
+        StackPane.setAlignment(gameWonLabel, Pos.TOP_CENTER);
+        StackPane.setAlignment(scoreLabel, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(pausedLabel, Pos.CENTER);
+
+    }
 }

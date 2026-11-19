@@ -25,8 +25,8 @@ public class GameController implements CoinEffectContext{
     private Stage stage;
     private Obstacle obstacle;
 
-    public static KeyCode key = KeyCode.LEFT;
-    public static KeyCode lastKey = KeyCode.LEFT;
+    private KeyCode key = KeyCode.LEFT;
+    private KeyCode lastKey = KeyCode.LEFT;
     private boolean keyPressed = false;
     private boolean paused = false;
 
@@ -100,7 +100,7 @@ public class GameController implements CoinEffectContext{
             lastKey = key;
             key = event.getCode();
             keyPressed = true;
-            gameView.turnDir(snake);
+            gameView.turnDir(snake, lastKey, key);
         }
 
         if (event.getCode().equals(KeyCode.P)) {
@@ -109,22 +109,15 @@ public class GameController implements CoinEffectContext{
 
         if (event.getCode().equals(KeyCode.TAB)) {
             reset();
-            gameView.scoreLabel.setText("Score: " + game.getScorePoints());
         }
 
         KeyCode code = event.getCode();
         if (code == KeyCode.PLUS || code == KeyCode.ADD || code == KeyCode.EQUALS){
             gameView.scaleToFullscreen(true, stage, obstacle, snake, coin);
-            gameView.gameOverLabel.setStyle("-fx-font-size: 50;");
-            gameView.gameWonLabel.setStyle("-fx-font-size: 50;");
-            gameView.scoreLabel.setStyle("-fx-font-size: 35;");
         }
 
         if (code == KeyCode.MINUS || code == KeyCode.SUBTRACT){
             gameView.scaleToFullscreen(false, stage, obstacle, snake, coin);
-            gameView.gameOverLabel.setStyle("-fx-font-size: 15;");
-            gameView.gameWonLabel.setStyle("-fx-font-size: 15;");
-            gameView.scoreLabel.setStyle("-fx-font-size: 15;");
         }
 
         if (event.getCode().equals(KeyCode.ESCAPE)) {
@@ -158,9 +151,7 @@ public class GameController implements CoinEffectContext{
         coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
 
         animation.setRate(game.getSpeed());
-        lastKey = KeyCode.LEFT;
         gameView.resetTurns();
-        key = KeyCode.LEFT;
         keyPressed = false;
         paused = false;
         gameView.showPaused(false);
