@@ -67,18 +67,15 @@
 
 .toggle-button.difficultyBtn {
     -fx-font-family: "SF Pixelate";
-    -fx-background-color: #3a3a3a;
-    -fx-text-fill: #aaaaaa;
+    -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
-    -fx-opacity: 0.9;
+    -fx-background-image: url("res/btn.png");
+    -fx-background-size: 90 40;
+    fx-pref-height: 40;
 }
 
 .toggle-button.difficultyBtn:selected {
-    -fx-font-family: "SF Pixelate";
-    -fx-background-color: #2eb872;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-border-color: white;
+    -fx-background-image: url("res/green_button04.png")
 }
 
 .menuInfo{
