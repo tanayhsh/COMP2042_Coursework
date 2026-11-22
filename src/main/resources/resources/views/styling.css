@@ -64,3 +64,21 @@
     -fx-font-family: "SF Pixelate";
     -fx-font-size: 20;
 }
+
+.toggle-button.difficultyBtn {
+    -fx-font-family: "SF Pixelate";
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-background-image: url("res/btn.png");
+    -fx-background-size: 90 40;
+    fx-pref-height: 40;
+}
+
+.toggle-button.difficultyBtn:selected {
+    -fx-background-image: url("res/green_button04.png")
+}
+
+.menuInfo{
+    -fx-font-family: "SF Pixelate";
+    -fx-font-size: 14px;
+}

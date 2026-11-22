@@ -4,6 +4,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane id="backgroundPane" maxHeight="400.0" maxWidth="550.0" minHeight="400.0" minWidth="550.0" prefHeight="400.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.comp2042.controller.MainMenuController">
     <stylesheets>
@@ -12,5 +15,14 @@
     <children>
         <Label id="title" alignment="CENTER" contentDisplay="CENTER" layoutY="110.0" prefHeight="35.0" prefWidth="550.0" text="Snake Game" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
         <Button fx:id="btn_start" layoutY="180.0" minHeight="40.0" minWidth="115.0" mnemonicParsing="false" onAction="#handleStart" prefHeight="40.0" prefWidth="115.0" styleClass="startAndQuitBtn" text="Start" textFill="WHITE" AnchorPane.leftAnchor="217.5" />
+        <HBox alignment="CENTER" spacing="10.0" layoutY="245.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                <children>
+                    <ToggleButton fx:id="btn_easy" text="Easy" prefWidth="90.0" styleClass="difficultyBtn"/>
+                    <ToggleButton fx:id="btn_normal" text="Normal" prefWidth="90.0" styleClass="difficultyBtn"/>
+                    <ToggleButton fx:id="btn_hard" text="Hard" prefWidth="90.0" styleClass="difficultyBtn"/>
+                </children>
+        </HBox>
+        <Label fx:id="lbl_difficultyInfo" alignment="CENTER" layoutY="285.0" prefWidth="550.0" textFill="#333333" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" styleClass="menuInfo"/>
+        <CheckBox fx:id="chk_powerUp" text="PowerUp" selected="true" layoutY="320.0" textFill="#333333" AnchorPane.leftAnchor="235.0" styleClass="menuInfo"/>
     </children>
 </AnchorPane>

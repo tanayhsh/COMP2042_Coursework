@@ -12,6 +12,10 @@ https://github.com/tanayhsh/COMP2042_Coursework
 - `p` : pause game
 - **Weighted coin spawning:** red coins appear about 80% of the time; gold, blue, rainbow and silver are rarer. Silver only appears while the board has no obstacles, and blue never appears on Easy.
 - **Game stops on a win:** the game loop stops as soon as the board is filled.
+- **Difficulty selection:** the main menu has Easy, Normal and Hard buttons (only one can be selected; Normal by default), with a short description of the chosen difficulty underneath.
+- **Power-ups toggle:** a menu checkbox turns special coins on or off; with power-ups off, only red coins spawn.
+- **Menu settings are remembered:** after pressing ESC to return to the menu, the last chosen difficulty and power-up setting are still selected.
+
 ## Implemented but Not Working Properly
 - **Obstacle safe zone and wrapping:** the safe zone uses grid distance, so it doesn't account for border wrapping. An obstacle can still appear just across a border when the snake is about to wrap.
 
@@ -64,6 +68,10 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | MainMenuController | Uses `gameView.attachTo()`; unused `getxValue()`/`getyValue()` removed | Follows GameView encapsulation |
 | ViewManager | Uses the `Stage` passed to `Main.start()`; throws a clear `IllegalStateException` if the menu FXML is missing; FXML path is a constant | Uses JavaFX's window as intended; fails clearly instead of a later NullPointerException |
 | Main | Passes its `Stage` to `ViewManager` | Follows ViewManager change |
+| MainMenuController | Difficulty buttons grouped in a `ToggleGroup`, each storing its `Difficulty` as user data; power-up checkbox; description label updated by a selection listener; `initialize()` sets Normal as default and prevents deselecting all buttons; hard-coded `DIFFICULTY`/`POWER_UP` constants removed | Lets the player choose settings; reading the enum from the selected button means adding a difficulty needs no `if/else` logic |
+| Difficulty | Each value now has a `getDescription()` | The menu text lives with the rules it describes |
+| MainMenu.fxml | Added three difficulty `ToggleButton`s in an `HBox`, a description label and a power-ups `CheckBox` | Menu layout kept in FXML (view) while behaviour stays in the controller |
+| styling.css | New `difficultyBtn` and `menuInfo` styles; selected difficulty uses `green_button04.png`, unselected uses `btn.png`; pixel font and smaller size for the new controls | Matches the existing menu style and makes the selected difficulty obvious; puts a previously unused image to use |
 
 ### Bugs fixed
 | Bug | Location | Cause | Fix |
@@ -112,6 +120,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | CoinTest | Every coin's points and type; coins never spawn on the snake, an obstacle or off the grid |
 | CoinEffectTest | Red and gold have no effect; rainbow requests the speed bonus; blue lets the snake wrap; silver spawns obstacles and reduces coins-to-win (uses a fake `CoinEffectContext`, no JavaFX) |
 | CoinFactoryTest | Red is ~80% over 10,000 seeded draws; every power-up can spawn on Normal; silver never spawns with obstacles; blue never spawns on Easy; only red when power-ups are off |
+| Manual (menu) | Normal selected by default with its description; clicking each difficulty highlights it and updates the text; clicking the selected button keeps it selected; Easy wraps, Hard is faster; power-ups off gives only red coins; settings remain after ESC |
 
 All tests are run with `mvn test` or from IntelliJ (right-click `src/test/java` → Run 'All Tests').
 
@@ -123,3 +132,5 @@ All tests are run with `mvn test` or from IntelliJ (right-click `src/test/java` 
 - **Regressions caught by tests during the coin refactor:** the new `Coin` constructor used `getBody().equals(p)` instead of `contains(p)`, letting coins spawn inside the snake; `CoinFactory.pickType()` was missing a `!`, so every coin was red. Both were caught by unit tests before reaching `main`.
 - **Self-reference in the `Timeline` initialiser:** `animation.stop()` couldn't be called inside the `Timeline`'s own lambda; extracting the body into `tick()` fixed it.
 - **Test in the wrong folder:** a test file under `src/main/java` couldn't see JUnit; moving it to `src/test/java` fixed it.
+- **Menu text too large or invisible:** the existing `.label` CSS rule sets every label to size 35, and `.root` makes the background white, so the new description label was huge and the white text couldn't be seen. Fixed with a dedicated `menuInfo` style and a dark text colour.
+- **Selected difficulty hard to see:** plain background colours barely showed against the menu. Switched to the game's own button images (`btn.png` / `green_button04.png`) so the selected button is clearly green and matches the Start button.
