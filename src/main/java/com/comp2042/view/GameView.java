@@ -31,6 +31,7 @@ public class GameView {
     private Label gameWonLabel;
     private Label scoreLabel;
     private Label pausedLabel;
+    private Label muteLabel;
     private boolean gameOverVis = false;
     private boolean gameWonVis = false;
 
@@ -75,10 +76,18 @@ public class GameView {
         pausedLabel = new Label("Paused");
         pausedLabel.setFont(new Font("Ariel", 20));
         pausedLabel.setVisible(false);
+
+        muteLabel = new Label("Mute");
+        muteLabel.setStyle("-fx-font-size: 16;");
+        muteLabel.setVisible(false);
     }
 
     public void showPaused(boolean paused){
         pausedLabel.setVisible(paused);
+    }
+
+    public void showMuted(boolean muted){
+        muteLabel.setVisible(muted);
     }
 
     public void scaleToFullscreen(boolean fullScreen, Stage primaryStage, Obstacle obstacle, Snake snake, Coin coin) {
@@ -223,12 +232,13 @@ public class GameView {
     }
 
     public void attachTo(StackPane pane){
-        pane.getChildren().addAll(gridCanvas, gameOverLabel, gameWonLabel, scoreLabel, pausedLabel);
+        pane.getChildren().addAll(gridCanvas, gameOverLabel, gameWonLabel, scoreLabel, pausedLabel, muteLabel);
         pane.setPadding(new Insets(20));
         StackPane.setAlignment(gameOverLabel, Pos.TOP_CENTER);
         StackPane.setAlignment(gameWonLabel, Pos.TOP_CENTER);
         StackPane.setAlignment(scoreLabel, Pos.BOTTOM_CENTER);
         StackPane.setAlignment(pausedLabel, Pos.CENTER);
+        StackPane.setAlignment(muteLabel, Pos.TOP_RIGHT);
 
     }
 }

@@ -9,6 +9,7 @@ import com.comp2042.model.coin.CoinEffectContext;
 import com.comp2042.model.coin.CoinFactory;
 import com.comp2042.model.coin.RedCoin;
 import com.comp2042.view.GameView;
+import com.comp2042.view.Sound;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -31,6 +32,7 @@ public class GameController implements CoinEffectContext{
     private boolean paused = false;
 
     private final CoinFactory coinFactory;
+    private final Sound sound = new Sound();
 
     public GameController(Snake snake, Coin coin, Game game, GameView gameView, Obstacle obstacle, Stage stage) {
         this.snake = snake;
@@ -54,6 +56,7 @@ public class GameController implements CoinEffectContext{
             snake.move(toDirection(key));
 
             if (!snake.isDead() && snake.ateCoin(coin)) {
+                sound.playCoin();
                 powerCoin();
                 game.incScore();
                 if (game.gameWon()) {
@@ -128,6 +131,11 @@ public class GameController implements CoinEffectContext{
             MainMenuController mainMenuController = new MainMenuController();
             mainMenuController.getViewManager().getPrimaryStage().show();
             mainMenuController.getViewManager().getGameStage().close();
+        }
+
+        if (event.getCode() == KeyCode.M){
+            boolean muted = sound.toggleMute();
+            gameView.showMuted(muted);
         }
     }
 

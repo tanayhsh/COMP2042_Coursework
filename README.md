@@ -13,8 +13,9 @@ https://github.com/tanayhsh/COMP2042_Coursework
 - **Weighted coin spawning:** red coins appear about 80% of the time; gold, blue, rainbow and silver are rarer. Silver only appears while the board has no obstacles, and blue never appears on Easy.
 - **Game stops on a win:** the game loop stops as soon as the board is filled.
 - **Difficulty selection:** the main menu has Easy, Normal and Hard buttons (only one can be selected; Normal by default), with a short description of the chosen difficulty underneath.
-- **Power-ups toggle:** a menu checkbox turns special coins on or off; with power-ups off, only red coins spawn.
+- **Power-ups toggle:** a menu checkbox turns special coins on or off; with power ups off, only red coins spawn.
 - **Menu settings are remembered:** after pressing ESC to return to the menu, the last chosen difficulty and power-up setting are still selected.
+- **Coin sound:** eating a coin plays a sound, using the previously unused `coinSound.wav`. Press `M` to mute or unmute; a MUTED label appears in the top right corner while sound is off. The mute setting stays the same after restarting with TAB.
 
 ## Implemented but Not Working Properly
 - **Obstacle safe zone and wrapping:** the safe zone uses grid distance, so it doesn't account for border wrapping. An obstacle can still appear just across a border when the snake is about to wrap.
@@ -32,6 +33,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | RedCoin | `com.comp2042.model.coin.RedCoin` | The standard coin (5 points, no effect). Previously the base `Coin` class doubled as the red coin |
 | CoinEffectContext | `com.comp2042.model.coin.CoinEffectContext` | Interface giving coins access to only what their effects need (snake, obstacles, game, speed bonus). Implemented by `GameController` |
 | CoinFactory | `com.comp2042.model.coin.CoinFactory` | Creates the next coin using a weighted random choice; replaces the `ran == 1`, `ran == 2`… chain in `GameController` |
+| SoundManager | `com.comp2042.view.SoundManager` | Loads the coin sound once with `AudioClip` and plays it when a coin is eaten; handles muting. Fails with a clear error if the sound file is missing. Keeps audio out of the controller and model |
 
 ## Modified Java Classes
 
@@ -72,6 +74,8 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Difficulty | Each value now has a `getDescription()` | The menu text lives with the rules it describes |
 | MainMenu.fxml | Added three difficulty `ToggleButton`s in an `HBox`, a description label and a power-ups `CheckBox` | Menu layout kept in FXML (view) while behaviour stays in the controller |
 | styling.css | New `difficultyBtn` and `menuInfo` styles; selected difficulty uses `green_button04.png`, unselected uses `btn.png`; pixel font and smaller size for the new controls | Matches the existing menu style and makes the selected difficulty obvious; puts a previously unused image to use |
+| GameController | Plays the coin sound when a coin is eaten; `M` toggles mute and updates the MUTED label | Audio feedback; the controller only reports the event, `SoundManager` handles playback and `GameView` handles display |
+| GameView | MUTED label in the top-right with `showMuted()`, added in `attachTo()` | Shows the player when sound is off |
 
 ### Bugs fixed
 | Bug | Location | Cause | Fix |
@@ -121,6 +125,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | CoinEffectTest | Red and gold have no effect; rainbow requests the speed bonus; blue lets the snake wrap; silver spawns obstacles and reduces coins-to-win (uses a fake `CoinEffectContext`, no JavaFX) |
 | CoinFactoryTest | Red is ~80% over 10,000 seeded draws; every power-up can spawn on Normal; silver never spawns with obstacles; blue never spawns on Easy; only red when power-ups are off |
 | Manual (menu) | Normal selected by default with its description; clicking each difficulty highlights it and updates the text; clicking the selected button keeps it selected; Easy wraps, Hard is faster; power-ups off gives only red coins; settings remain after ESC |
+| Manual (sound) | Coin sound plays when any coin is eaten; M mutes and shows MUTED; M again unmutes and hides it; mute state and label stay consistent after TAB; no stutter when eating coins quickly; label stays in the corner in fullscreen |
 
 All tests are run with `mvn test` or from IntelliJ (right-click `src/test/java` → Run 'All Tests').
 
@@ -133,4 +138,4 @@ All tests are run with `mvn test` or from IntelliJ (right-click `src/test/java` 
 - **Self-reference in the `Timeline` initialiser:** `animation.stop()` couldn't be called inside the `Timeline`'s own lambda; extracting the body into `tick()` fixed it.
 - **Test in the wrong folder:** a test file under `src/main/java` couldn't see JUnit; moving it to `src/test/java` fixed it.
 - **Menu text too large or invisible:** the existing `.label` CSS rule sets every label to size 35, and `.root` makes the background white, so the new description label was huge and the white text couldn't be seen. Fixed with a dedicated `menuInfo` style and a dark text colour.
-- **Selected difficulty hard to see:** plain background colours barely showed against the menu. Switched to the game's own button images (`btn.png` / `green_button04.png`) so the selected button is clearly green and matches the Start button.
+- **Selected difficulty hard to see:** plain background colors barely showed against the menu. Switched to the game's own button images (`btn.png` / `green_button04.png`) so the selected button is clearly green and matches the Start button.
