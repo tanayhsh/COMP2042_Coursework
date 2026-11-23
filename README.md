@@ -133,4 +133,4 @@ All tests are run with `mvn test` or from IntelliJ (right-click `src/test/java` 
 - **Self-reference in the `Timeline` initialiser:** `animation.stop()` couldn't be called inside the `Timeline`'s own lambda; extracting the body into `tick()` fixed it.
 - **Test in the wrong folder:** a test file under `src/main/java` couldn't see JUnit; moving it to `src/test/java` fixed it.
 - **Menu text too large or invisible:** the existing `.label` CSS rule sets every label to size 35, and `.root` makes the background white, so the new description label was huge and the white text couldn't be seen. Fixed with a dedicated `menuInfo` style and a dark text colour.
-- **Selected difficulty hard to see:** plain background colours barely showed against the menu. Switched to the game's own button images (`btn.png` / `green_button04.png`) so the selected button is clearly green and matches the Start button.
+- **Selected difficulty hard to see:** plain background colors barely showed against the menu. Switched to the game's own button images (`btn.png` / `green_button04.png`) so the selected button is clearly green and matches the Start button.
