@@ -45,7 +45,7 @@ public class GameView {
 
     public GameView(Game game) {
         this.game = game;
-        this.turnArray =new int[game.getWidth()][game.getHeight()];
+        this.turnArray = new int[game.getWidth()][game.getHeight()];
     }
 
     public void makeScene(Scene scene, Snake snake, Coin coin, Obstacle obstacle) {
@@ -82,11 +82,11 @@ public class GameView {
         muteLabel.setVisible(false);
     }
 
-    public void showPaused(boolean paused){
+    public void showPaused(boolean paused) {
         pausedLabel.setVisible(paused);
     }
 
-    public void showMuted(boolean muted){
+    public void showMuted(boolean muted) {
         muteLabel.setVisible(muted);
     }
 
@@ -97,7 +97,7 @@ public class GameView {
         double widthScale = Screen.getPrimary().getVisualBounds().getWidth() / initX;
 
         if (fullScreen && !fullsize) {
-            fullScale = Math.min(heightScale,widthScale);
+            fullScale = Math.min(heightScale, widthScale);
             gridCanvas.setWidth(gridCanvas.getWidth() * fullScale);
             gridCanvas.setHeight(gridCanvas.getHeight() * fullScale);
             fullsize = true;
@@ -124,7 +124,7 @@ public class GameView {
         gc.drawImage(entity.getCoinImages(coin.getType()), (coin.getPos().x * game.getCellSize()) * fullScale, (coin.getPos().y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale - 3 * fullScale, game.getCellSize() * fullScale - 3 * fullScale);
 
         List<Point> body = snake.getBody();
-        for (int i = 0; i < body.size(); i++){
+        for (int i = 0; i < body.size(); i++) {
             drawBody(snake, body, body.get(i), i);
         }
 
@@ -152,16 +152,7 @@ public class GameView {
             params.setFill(Color.TRANSPARENT);
             rotatedImage = entity.getTail().snapshot(params, null);
         } else if (index == 0) {
-            int rotateTail;
-            if (body.get(1).getX() == body.get(0).getX() && body.get(1).getY() == body.get(0).getY() - 1) {
-                rotateTail = 0;
-            } else if (body.get(1).getX() == body.get(0).getX() && body.get(1).getY() == body.get(0).getY() + 1) {
-                rotateTail = 180;
-            } else if (body.get(1).getX() == body.get(0).getX() - 1 && body.get(1).getY() == body.get(0).getY()) {
-                rotateTail = 270;
-            } else {
-                rotateTail = 90;
-            }
+            int rotateTail = tailRotation(body.get(0), body.get(1));
             entity.getTail().setRotate(rotateTail);
             SnapshotParameters params = new SnapshotParameters();
             params.setFill(Color.TRANSPARENT);
@@ -185,11 +176,11 @@ public class GameView {
         gc.drawImage(rotatedImage, (point.x * game.getCellSize()) * fullScale, (point.y * game.getCellSize()) * fullScale, game.getCellSize() * fullScale, game.getCellSize() * fullScale);
     }
 
-    public void turnDir(Snake snake,  KeyCode from, KeyCode to) {
+    public void turnDir(Snake snake, KeyCode from, KeyCode to) {
 
         int x = snake.getHead().x;
         int y = snake.getHead().y;
-        
+
         if ((from == KeyCode.LEFT && to == KeyCode.UP) || (from == KeyCode.DOWN && to == KeyCode.RIGHT)) {
             turnArray[x][y] = 2;
         } else if ((from == KeyCode.LEFT && to == KeyCode.DOWN) || (from == KeyCode.UP && to == KeyCode.RIGHT)) {
@@ -225,13 +216,13 @@ public class GameView {
         scoreLabel.setText("Score: " + game.getScorePoints());
     }
 
-    public void resetTurns(){
-        for (int[] coloumn : turnArray){
+    public void resetTurns() {
+        for (int[] coloumn : turnArray) {
             java.util.Arrays.fill(coloumn, 0);
         }
     }
 
-    public void attachTo(StackPane pane){
+    public void attachTo(StackPane pane) {
         pane.getChildren().addAll(gridCanvas, gameOverLabel, gameWonLabel, scoreLabel, pausedLabel, muteLabel);
         pane.setPadding(new Insets(20));
         StackPane.setAlignment(gameOverLabel, Pos.TOP_CENTER);
@@ -240,5 +231,22 @@ public class GameView {
         StackPane.setAlignment(pausedLabel, Pos.CENTER);
         StackPane.setAlignment(muteLabel, Pos.TOP_RIGHT);
 
+    }
+
+    public static int tailRotation(Point tail, Point next) {
+        int dx = next.x - tail.x;
+        int dy = next.y - tail.y;
+
+        if (Math.abs(dx) > 1) {
+            dx = -Integer.signum(dx);
+        }
+        if (Math.abs(dy) > 1) {
+            dy = -Integer.signum(dy);
+        }
+
+        if (dy == -1) return 0;
+        if (dy == 1) return 180;
+        if (dx == -1) return 270;
+        return 90;
     }
 }
