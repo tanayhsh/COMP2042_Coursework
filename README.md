@@ -76,6 +76,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | styling.css | New `difficultyBtn` and `menuInfo` styles; selected difficulty uses `green_button04.png`, unselected uses `btn.png`; pixel font and smaller size for the new controls | Matches the existing menu style and makes the selected difficulty obvious; puts a previously unused image to use |
 | GameController | Plays the coin sound when a coin is eaten; `M` toggles mute and updates the MUTED label | Audio feedback; the controller only reports the event, `SoundManager` handles playback and `GameView` handles display |
 | GameView | MUTED label in the top-right with `showMuted()`, added in `attachTo()` | Shows the player when sound is off |
+| GameView | Tail rotation moved into a static `tailRotation(tail, next)` helper that handles border wrapping | Fixes the wrap bug; replaces a four-branch `if/else` with one testable method |
 
 ### Bugs fixed
 | Bug | Location | Cause | Fix |
@@ -102,6 +103,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Coins-to-win reduced by total obstacles, not obstacles added | `GameController.powerCoin()` | Passed `getObstacles().size()`; only correct because silver needs an empty board | `newObstacles()` returns how many it added, and only that is subtracted |
 | Missing menu file caused a confusing crash | `ViewManager.initializeMainMenu()` | Load errors were printed and ignored, leaving `root` null, which crashed later in `new Scene(root)` | Throw an `IllegalStateException` naming the missing file |
 | Head looked detached from the body after dying | `Snake.move()` | Direction was updated before the death check, so the head was drawn facing the obstacle even though it never moved | Restore the previous direction when the head is moved back on death |
+| Tail flashed the wrong direction when wrapping across an edge | `GameView.drawBody()` | Tail rotation only checked for a neighbour 1 cell away, so wrapping to the opposite side missed every check and fell back to right | Updated tailRotation() to treat opposite-edge segments as adjacent neighbours |
 
 ### Package structure
 | Package | Responsibility | Classes |
@@ -126,6 +128,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | CoinFactoryTest | Red is ~80% over 10,000 seeded draws; every power-up can spawn on Normal; silver never spawns with obstacles; blue never spawns on Easy; only red when power-ups are off |
 | Manual (menu) | Normal selected by default with its description; clicking each difficulty highlights it and updates the text; clicking the selected button keeps it selected; Easy wraps, Hard is faster; power-ups off gives only red coins; settings remain after ESC |
 | Manual (sound) | Coin sound plays when any coin is eaten; M mutes and shows MUTED; M again unmutes and hides it; mute state and label stay consistent after TAB; no stutter when eating coins quickly; label stays in the corner in fullscreen |
+| TailRotationTest | Tail points away from its neighbour in all four directions, including across horizontal and vertical wraps |
 
 All tests are run with `mvn test` or from IntelliJ (right-click `src/test/java` → Run 'All Tests').
 
@@ -139,3 +142,4 @@ All tests are run with `mvn test` or from IntelliJ (right-click `src/test/java` 
 - **Test in the wrong folder:** a test file under `src/main/java` couldn't see JUnit; moving it to `src/test/java` fixed it.
 - **Menu text too large or invisible:** the existing `.label` CSS rule sets every label to size 35, and `.root` makes the background white, so the new description label was huge and the white text couldn't be seen. Fixed with a dedicated `menuInfo` style and a dark text colour.
 - **Selected difficulty hard to see:** plain background colors barely showed against the menu. Switched to the game's own button images (`btn.png` / `green_button04.png`) so the selected button is clearly green and matches the Start button.
+- **Typo caught by a test:** after fixing horizontal wrapping, vertical wrapping still looked wrong in play. `TailRotationTest` showed the vertical case returning 270 instead of 0, which pointed to a line that corrected `dy` but stored the result in `dx`.
