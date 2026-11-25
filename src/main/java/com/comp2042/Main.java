@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import com.comp2042.model.HighScore;
 import com.comp2042.view.ViewManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -7,6 +8,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private static ViewManager viewManager;
+    private static final HighScore highScore = new HighScore();
 
     @Override
     public void start(Stage primaryStage) {
@@ -20,5 +22,9 @@ public class Main extends Application {
 
     public static ViewManager getViewManager() {
         return viewManager;
+    }
+
+    public static HighScore getHighScore(){
+        return highScore;
     }
 }

@@ -1,9 +1,6 @@
 package com.comp2042.controller;
 
-import com.comp2042.model.Direction;
-import com.comp2042.model.Game;
-import com.comp2042.model.Obstacle;
-import com.comp2042.model.Snake;
+import com.comp2042.model.*;
 import com.comp2042.model.coin.Coin;
 import com.comp2042.model.coin.CoinEffectContext;
 import com.comp2042.model.coin.CoinFactory;
@@ -33,18 +30,22 @@ public class GameController implements CoinEffectContext{
 
     private final CoinFactory coinFactory;
     private final Sound sound = new Sound();
+    private final HighScore highScore;
+    private boolean scoreRecorded = false;
 
-    public GameController(Snake snake, Coin coin, Game game, GameView gameView, Obstacle obstacle, Stage stage) {
+    public GameController(Snake snake, Coin coin, Game game, GameView gameView, Obstacle obstacle, Stage stage, HighScore highScore) {
         this.snake = snake;
         this.coin = coin;
         this.gameView = gameView;
         this.game = game;
         this.stage = stage;
         this.coinFactory = new CoinFactory(game.getDifficulty());
-
+        this.highScore = highScore;
         this.obstacle = obstacle;
+
         animation.setCycleCount(Animation.INDEFINITE);
         animation.setRate(game.getSpeed());
+        gameView.setBestScore(highScore.getBest(game.getDifficulty()));
     }
 
     private final Timeline animation = new Timeline(new KeyFrame(Duration.seconds(1), event -> tick()));
@@ -64,6 +65,7 @@ public class GameController implements CoinEffectContext{
                     gameView.drawGrid(coin, snake, obstacle);
                     gameView.gameWon();
                     gameView.updateScoreLabel();
+                    recordScoreIfOver();
                     return;
                 }
                 newCoin();
@@ -76,6 +78,7 @@ public class GameController implements CoinEffectContext{
             gameView.gameWon();
             gameView.gameOver(snake);
             gameView.updateScoreLabel();
+            recordScoreIfOver();
         }
     }
     /** converts direction key into movement key */
@@ -171,6 +174,10 @@ public class GameController implements CoinEffectContext{
         gameView.updateScoreLabel();
 
         gameView.drawGrid(coin, snake, obstacle);
+
+        scoreRecorded = false;
+
+        gameView.showNewHighScore(false);
     }
 
     private void powerCoin() {
@@ -197,6 +204,17 @@ public class GameController implements CoinEffectContext{
             animation.pause();
         }
         gameView.showPaused(paused);
+    }
+
+    private void recordScoreIfOver(){
+        if  (scoreRecorded || !isGameOver()){
+            return;
+        }
+        scoreRecorded = true;
+
+        boolean newRecord = highScore.submit(game.getDifficulty(), game.getScorePoints());
+        gameView.setBestScore(highScore.getBest(game.getDifficulty()));
+        gameView.showNewHighScore(newRecord);
     }
 
     @Override

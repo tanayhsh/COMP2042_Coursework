@@ -32,6 +32,7 @@ public class GameView {
     private Label scoreLabel;
     private Label pausedLabel;
     private Label muteLabel;
+    private Label newHighScoreLabel;
     private boolean gameOverVis = false;
     private boolean gameWonVis = false;
 
@@ -39,9 +40,10 @@ public class GameView {
     private double initX;
     private double initY;
     private double fullScale = 1;
-    private boolean fullsize = false;
+    private boolean fullSize = false;
     private final int[][] turnArray;
     private final EntityManager entity = new EntityManager();
+    private int bestScore;
 
     public GameView(Game game) {
         this.game = game;
@@ -67,7 +69,7 @@ public class GameView {
         gameWonLabel.getStylesheets().add(css);
         gameWonLabel.setVisible(false);
 
-        scoreLabel = new Label("Score: " + game.getScorePoints());
+        scoreLabel = new Label();
         scoreLabel.setId("scoreLabel");
         scoreLabel.getStylesheets().add(css);
         scoreLabel.setFont(new Font("Arial", 20));
@@ -80,6 +82,12 @@ public class GameView {
         muteLabel = new Label("Mute");
         muteLabel.setStyle("-fx-font-size: 16;");
         muteLabel.setVisible(false);
+
+        newHighScoreLabel = new Label("NEW HIGH SCORE");
+        newHighScoreLabel.setStyle("-fx-font-size: 24; -fx-text-fill: #d4a017;");
+        newHighScoreLabel.setVisible(false);
+
+        updateScoreLabel();
     }
 
     public void showPaused(boolean paused) {
@@ -96,16 +104,16 @@ public class GameView {
         double heightScale = Screen.getPrimary().getVisualBounds().getHeight() / initY;
         double widthScale = Screen.getPrimary().getVisualBounds().getWidth() / initX;
 
-        if (fullScreen && !fullsize) {
+        if (fullScreen && !fullSize) {
             fullScale = Math.min(heightScale, widthScale);
             gridCanvas.setWidth(gridCanvas.getWidth() * fullScale);
             gridCanvas.setHeight(gridCanvas.getHeight() * fullScale);
-            fullsize = true;
+            fullSize = true;
         } else if (!fullScreen) {
             fullScale = 1;
             gridCanvas.setWidth(initX);
             gridCanvas.setHeight(initY);
-            fullsize = false;
+            fullSize = false;
         }
 
         String bigLabel = fullScreen ? "fx-font-size 50;" : "fx-font-size-15";
@@ -213,7 +221,18 @@ public class GameView {
     }
 
     public void updateScoreLabel() {
-        scoreLabel.setText("Score: " + game.getScorePoints());
+        scoreLabel.setText("Score: " + game.getScorePoints() + "    Personal Best: " + bestScore);
+    }
+
+    public void setBestScore(int best){
+        bestScore = best;
+        if (scoreLabel != null) {
+            updateScoreLabel();
+        }
+    }
+
+    public void showNewHighScore(boolean show){
+        newHighScoreLabel.setVisible(show);
     }
 
     public void resetTurns() {
@@ -230,7 +249,7 @@ public class GameView {
         StackPane.setAlignment(scoreLabel, Pos.BOTTOM_CENTER);
         StackPane.setAlignment(pausedLabel, Pos.CENTER);
         StackPane.setAlignment(muteLabel, Pos.TOP_RIGHT);
-
+        StackPane.setAlignment(newHighScoreLabel, Pos.CENTER);
     }
 
     public static int tailRotation(Point tail, Point next) {
