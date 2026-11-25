@@ -29,7 +29,7 @@ public class SilverCoin extends Coin{
         Game game = context.getGame();
         int amount = random.nextInt(game.getWidth() * game.getHeight() / 20) + 3;
         int added = context.getObstacle().newObstacles(context.getSnake(), this, amount);
-        game.decMaxScore(added);
+        game.reduceCoinsToWin(added);
     }
 }
 
