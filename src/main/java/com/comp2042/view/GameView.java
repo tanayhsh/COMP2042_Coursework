@@ -242,7 +242,7 @@ public class GameView {
     }
 
     public void attachTo(StackPane pane) {
-        pane.getChildren().addAll(gridCanvas, gameOverLabel, gameWonLabel, scoreLabel, pausedLabel, muteLabel);
+        pane.getChildren().addAll(gridCanvas, gameOverLabel, gameWonLabel, scoreLabel, pausedLabel, muteLabel, newHighScoreLabel);
         pane.setPadding(new Insets(20));
         StackPane.setAlignment(gameOverLabel, Pos.TOP_CENTER);
         StackPane.setAlignment(gameWonLabel, Pos.TOP_CENTER);
