@@ -16,9 +16,12 @@ https://github.com/tanayhsh/COMP2042_Coursework
 - **Power-ups toggle:** a menu checkbox turns special coins on or off; with power ups off, only red coins spawn.
 - **Menu settings are remembered:** after pressing ESC to return to the menu, the last chosen difficulty and power-up setting are still selected.
 - **Coin sound:** eating a coin plays a sound, using the previously unused `coinSound.wav`. Press `M` to mute or unmute; a MUTED label appears in the top right corner while sound is off. The mute setting stays the same after restarting with TAB.
+- **High scores:** the best score for each difficulty is saved between sessions. It is shown under the difficulty description on the menu and next to the current score in game, and a NEW HIGH SCORE! message appears when a record is beaten. Scores are stored in  
+`<home folder>/.snakegame/highscores.properties`.
 
 ## Implemented but Not Working Properly
 - **Obstacle safe zone and wrapping:** the safe zone uses grid distance, so it doesn't account for border wrapping. An obstacle can still appear just across a border when the snake is about to wrap.
+- **High scores are per difficulty only:** if maps or levels are added later, scores would need to be tracked per map as well.
 
 ## Features Not Implemented
 (none so far)
@@ -34,6 +37,8 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | CoinEffectContext | `com.comp2042.model.coin.CoinEffectContext` | Interface giving coins access to only what their effects need (snake, obstacles, game, speed bonus). Implemented by `GameController` |
 | CoinFactory | `com.comp2042.model.coin.CoinFactory` | Creates the next coin using a weighted random choice; replaces the `ran == 1`, `ran == 2`… chain in `GameController` |
 | SoundManager | `com.comp2042.view.SoundManager` | Loads the coin sound once with `AudioClip` and plays it when a coin is eaten; handles muting. Fails with a clear error if the sound file is missing. Keeps audio out of the controller and model |
+| HighScores | `com.comp2042.model.HighScores` | Holds the best score for each difficulty (`EnumMap`); `submit()` updates it only for a strictly higher score and reports whether it was a new record. Pure logic, no file access |
+| HighScoreFile | `com.comp2042.savedata.HighScoreFile` | Loads and saves `HighScores` as a `Properties` file in the user's home folder; a missing file loads as zeros, damaged entries are ignored, and save failures print a warning instead of crashing the game |
 
 ## Modified Java Classes
 
@@ -77,6 +82,11 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | GameController | Plays the coin sound when a coin is eaten; `M` toggles mute and updates the MUTED label | Audio feedback; the controller only reports the event, `SoundManager` handles playback and `GameView` handles display |
 | GameView | MUTED label in the top-right with `showMuted()`, added in `attachTo()` | Shows the player when sound is off |
 | GameView | Tail rotation moved into a static `tailRotation(tail, next)` helper that handles border wrapping | Fixes the wrap bug; replaces a four-branch `if/else` with one testable method |
+| Game | `maxScore` renamed to `coinsToWin` (`getCoinsToWin()`, `reduceCoinsToWin()`) | Avoids confusion with the new high score feature: the value is the number of coins needed to fill the board, not a record |
+| GameController | Takes `HighScores` and an `onNewHighScore` action; `recordScoreIfOver()` submits the score exactly once when the game ends and runs the action on a new record | Connects scoring to high scores; saving is injected rather than hard-wired into the controller |
+| GameView | Score label shows "Best"; NEW HIGH SCORE! label with `setBestScore()` and `showNewHighScore()` | Displays records in game |
+| MainMenuController | Shows the best score for the selected difficulty, refreshed whenever the menu reappears; passes `Main.getHighScores()` and `Main::saveHighScores` to the game | Player sees their records before playing |
+| Main | Loads high scores once at start-up via `HighScoreFile.inUserHome()`; `getHighScores()` and `saveHighScores()` | One shared set of records for the whole app |
 
 ### Bugs fixed
 | Bug | Location | Cause | Fix |
@@ -115,6 +125,7 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | `com.comp2042.controller` | Input handling and game loop | GameController, MainMenuController |
 | `com.comp2042.model` | Game logic and state, no JavaFX rendering | Snake, Game, Obstacle, CoinType, Direction, Difficulty |
 | `com.comp2042.model.coin` | Coin types, their effects and creation | Coin, RedCoin, GoldCoin, BlueCoin, RainbowCoin, SilverCoin, CoinEffectContext, CoinFactory |
+| `com.comp2042.savedata` | Saving and loading data between sessions | HighScoreFile |
 
 ### Testing
 | Test class | What it covers |
@@ -126,9 +137,12 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | CoinTest | Every coin's points and type; coins never spawn on the snake, an obstacle or off the grid |
 | CoinEffectTest | Red and gold have no effect; rainbow requests the speed bonus; blue lets the snake wrap; silver spawns obstacles and reduces coins-to-win (uses a fake `CoinEffectContext`, no JavaFX) |
 | CoinFactoryTest | Red is ~80% over 10,000 seeded draws; every power-up can spawn on Normal; silver never spawns with obstacles; blue never spawns on Easy; only red when power-ups are off |
+| TailRotationTest | Tail points away from its neighbour in all four directions, including across horizontal and vertical wraps |
+| HighScoresTest | Every difficulty starts at 0; a higher score is a record; equal or lower is not; a first game of 0 is not a record; difficulties are tracked separately; negative loaded values become 0 |
+| HighScoreFileTest | Save-then-load round trip; missing file gives zeros; damaged entries (text, negative numbers) ignored; missing folders created. Uses JUnit's `@TempDir`, so real scores are never touched |
 | Manual (menu) | Normal selected by default with its description; clicking each difficulty highlights it and updates the text; clicking the selected button keeps it selected; Easy wraps, Hard is faster; power-ups off gives only red coins; settings remain after ESC |
 | Manual (sound) | Coin sound plays when any coin is eaten; M mutes and shows MUTED; M again unmutes and hides it; mute state and label stay consistent after TAB; no stutter when eating coins quickly; label stays in the corner in fullscreen |
-| TailRotationTest | Tail points away from its neighbour in all four directions, including across horizontal and vertical wraps |
+| Manual (high scores) | Best shown in menu and game; NEW HIGH SCORE! only on a strictly higher score; menu updates after ESC; scores survive closing and reopening; a damaged file does not crash the game |
 
 All tests are run with `mvn test` or from IntelliJ (right-click `src/test/java` → Run 'All Tests').
 
