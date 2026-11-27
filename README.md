@@ -6,10 +6,20 @@ https://github.com/tanayhsh/COMP2042_Coursework
 ## Compilation Instructions
 (to be added later)
 
+
 ## Implemented and Working Properly
-- `+` / `=` / numpad `+`: enter fullscreen
-- `-` / numpad `-`: exit fullscreen
-- `p` : pause game
+### Controls
+| Key | Action |
+|---|---|
+| Arrow keys | Move (only 90° turns; the snake starts facing left, so the first move can be left, up or down) |
+| `P` | Pause / resume (shows PAUSED; input is blocked while paused) |
+| `M` | Mute / unmute sound (shows MUTED) |
+| `TAB` | Restart the current game |
+| `ESC` | Return to the main menu |
+| `+` / `=` / numpad `+` | Enter fullscreen |
+| `-` / numpad `-` | Exit fullscreen |
+
+### Features
 - **Weighted coin spawning:** red coins appear about 80% of the time; gold, blue, rainbow and silver are rarer. Silver only appears while the board has no obstacles, and blue never appears on Easy.
 - **Game stops on a win:** the game loop stops as soon as the board is filled.
 - **Difficulty selection:** the main menu has Easy, Normal and Hard buttons (only one can be selected; Normal by default), with a short description of the chosen difficulty underneath.
@@ -114,6 +124,8 @@ https://github.com/tanayhsh/COMP2042_Coursework
 | Missing menu file caused a confusing crash | `ViewManager.initializeMainMenu()` | Load errors were printed and ignored, leaving `root` null, which crashed later in `new Scene(root)` | Throw an `IllegalStateException` naming the missing file |
 | Head looked detached from the body after dying | `Snake.move()` | Direction was updated before the death check, so the head was drawn facing the obstacle even though it never moved | Restore the previous direction when the head is moved back on death |
 | Tail flashed the wrong direction when wrapping across an edge | `GameView.drawBody()` | Tail rotation only checked for a neighbour 1 cell away, so wrapping to the opposite side missed every check and fell back to right | Updated tailRotation() to treat opposite-edge segments as adjacent neighbours |
+| Pressing right first made the snake move left | `GameController.handle()` | Any arrow key started the game, but right was then rejected as a reversal, so the snake kept its starting direction (left) | Only start the game when the pressed direction will actually be used |
+| After TAB restart, the wrong direction was blocked | `GameController.reset()` | The new snake faces left, but the controller kept the previous game's direction, so it rejected the wrong key as a reversal | Reset `key` and `lastKey` to LEFT in `reset()` |
 
 ### Package structure
 | Package | Responsibility | Classes |
