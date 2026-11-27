@@ -7,8 +7,8 @@ public class Game {
     private int width;
     private int height;
     private int score;
-    private int maxScore;
-    private int initialMaxScore;
+    private int coinsToWin;
+    private int initialCoinsToWin;
     private double cellSize;
     private int scorePoints;
     private double speed;
@@ -21,8 +21,8 @@ public class Game {
         this.powerUp = powerUp;
         width = x;
         height = y;
-        initialMaxScore = x * y - 2;
-        maxScore = initialMaxScore;
+        initialCoinsToWin = x * y - 2;
+        coinsToWin = initialCoinsToWin;
 
         speed = difficulty.getSpeed();
         noBorder = difficulty.isNoBorder();
@@ -35,15 +35,15 @@ public class Game {
     }
 
     public boolean gameWon() {
-        return score == maxScore;
+        return score == coinsToWin;
     }
 
     public void incScore() {
         score++;
     }
 
-    public void decMaxScore(int obstacleCount) {
-        this.maxScore -= obstacleCount;
+    public void reduceCoinsToWin(int obstacleCount) {
+        this.coinsToWin -= obstacleCount;
     }
 
     public int getWidth() {
@@ -57,7 +57,7 @@ public class Game {
     public void resetScore() {
         score = 0;
         scorePoints = 0;
-        maxScore = initialMaxScore;
+        coinsToWin = initialCoinsToWin;
     }
 
     public Color getColor() {
@@ -88,8 +88,8 @@ public class Game {
         return noBorder;
     }
 
-    public int getMaxScore() {
-        return maxScore;
+    public int getCoinsToWin() {
+        return coinsToWin;
     }
 
     public Difficulty getDifficulty() {

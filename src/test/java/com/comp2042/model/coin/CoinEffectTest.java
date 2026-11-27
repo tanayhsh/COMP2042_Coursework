@@ -68,10 +68,10 @@ class CoinEffectTest {
 
     @Test
     void silverCoinSpawnsObstaclesAndReducesCoinsToWin(){
-        int before = game.getMaxScore();
+        int before = game.getCoinsToWin();
         new SilverCoin(size, size, snake, obstacle).applyEffect(context);
         int added = obstacle.getObstacles().size();
         assertTrue(added >= 3);
-        assertEquals(before - added, game.getMaxScore());
+        assertEquals(before - added, game.getCoinsToWin());
     }
 }

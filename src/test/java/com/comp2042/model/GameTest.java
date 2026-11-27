@@ -16,22 +16,22 @@ class GameTest{
 
     @Test
     void calculateMaxScoreCorrectly(){
-        assertEquals(398, newGame(Difficulty.EASY).getMaxScore());
+        assertEquals(398, newGame(Difficulty.EASY).getCoinsToWin());
     }
 
     @Test
     void testObstacleDecreasesMaxScore(){
         Game game = newGame(Difficulty.EASY);
-        game.decMaxScore(5);
-        assertEquals(393, game.getMaxScore());
+        game.reduceCoinsToWin(5);
+        assertEquals(393, game.getCoinsToWin());
     }
 
     @Test
     void resetRestoresMaxScore(){
         Game game = newGame(Difficulty.EASY);
-        game.decMaxScore(5);
+        game.reduceCoinsToWin(5);
         game.resetScore();
-        assertEquals(398, game.getMaxScore());
+        assertEquals(398, game.getCoinsToWin());
     }
 
     @Test
@@ -62,9 +62,9 @@ class GameTest{
     @Test
     void obstaclesReduceCoinsNeededToWin(){
         Game game = newGame(3,3, Difficulty.EASY);
-        assertEquals(7, game.getMaxScore());
-        game.decMaxScore(2);
-        assertEquals(5, game.getMaxScore());
+        assertEquals(7, game.getCoinsToWin());
+        game.reduceCoinsToWin(2);
+        assertEquals(5, game.getCoinsToWin());
         for (int i =0; i < 5; i++){
             game.incScore();
         }

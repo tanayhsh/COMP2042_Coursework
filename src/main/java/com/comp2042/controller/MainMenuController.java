@@ -49,11 +49,13 @@ public class MainMenuController {
             if (newToggle == null){
                 oldToggle.setSelected(true);
             } else{
-                lbl_difficultyInfo.setText(selectedDifficulty().getDescription());
+                updateDifficultyInfo();
             }
         });
 
         btn_normal.setSelected(true);
+
+        viewManager.getPrimaryStage().setOnShown(event -> updateDifficultyInfo());
     }
 
     private Difficulty selectedDifficulty(){
@@ -77,7 +79,7 @@ public class MainMenuController {
         Coin coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
 
         GameView gameView = new GameView(game);
-        GameController controller = new GameController(snake, coin, game, gameView, obstacle, gameStage);
+        GameController controller = new GameController(snake, coin, game, gameView, obstacle, gameStage, Main.getHighScore(), Main :: saveHighScore);
 
         StackPane gamePane = new StackPane();
         gameScene = new Scene(gamePane, game.getWidth() * game.getCellSize(), game.getHeight() * game.getCellSize());
@@ -90,5 +92,11 @@ public class MainMenuController {
 
     public ViewManager getViewManager() {
         return viewManager;
+    }
+
+    private void updateDifficultyInfo(){
+        Difficulty difficulty = selectedDifficulty();
+        lbl_difficultyInfo.setText(difficulty.getDescription()
+                + "     Personal Best: " + Main.getHighScore().getBest(difficulty));
     }
 }
