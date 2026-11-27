@@ -103,7 +103,21 @@ public class GameController implements CoinEffectContext{
     }
 
     public void handle(KeyEvent event) {
-        if (event.getCode().isArrowKey() && !isGameOver() && !paused) animation.play();
+        KeyCode code = event.getCode();
+        if (code.isArrowKey() && !isGameOver() && !paused){
+            boolean turning = valKey(code);
+
+            if (turning || code == key){
+                animation.play();
+            }
+
+            if (turning && keyPressed){
+                lastKey = key;
+                key = code;
+                keyPressed = true;
+                gameView.turnDir(snake, lastKey, key);
+            }
+        }
 
         if (!paused && valKey(event.getCode()) && !keyPressed) {
             lastKey = key;
@@ -120,7 +134,6 @@ public class GameController implements CoinEffectContext{
             reset();
         }
 
-        KeyCode code = event.getCode();
         if (code == KeyCode.PLUS || code == KeyCode.ADD || code == KeyCode.EQUALS){
             gameView.scaleToFullscreen(true, stage, obstacle, snake, coin);
         }
@@ -166,6 +179,8 @@ public class GameController implements CoinEffectContext{
 
         animation.setRate(game.getSpeed());
         gameView.resetTurns();
+        key = KeyCode.LEFT;
+        lastKey = KeyCode.LEFT;
         keyPressed = false;
         paused = false;
         gameView.showPaused(false);
