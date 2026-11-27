@@ -79,7 +79,7 @@ public class MainMenuController {
         Coin coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
 
         GameView gameView = new GameView(game);
-        GameController controller = new GameController(snake, coin, game, gameView, obstacle, gameStage, Main.getHighScore());
+        GameController controller = new GameController(snake, coin, game, gameView, obstacle, gameStage, Main.getHighScore(), Main :: saveHighScore);
 
         StackPane gamePane = new StackPane();
         gameScene = new Scene(gamePane, game.getWidth() * game.getCellSize(), game.getHeight() * game.getCellSize());

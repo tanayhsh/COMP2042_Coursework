@@ -33,7 +33,9 @@ public class GameController implements CoinEffectContext{
     private final HighScore highScore;
     private boolean scoreRecorded = false;
 
-    public GameController(Snake snake, Coin coin, Game game, GameView gameView, Obstacle obstacle, Stage stage, HighScore highScore) {
+    private final Runnable onNewHighScore;
+
+    public GameController(Snake snake, Coin coin, Game game, GameView gameView, Obstacle obstacle, Stage stage, HighScore highScore, Runnable onNewHighScore) {
         this.snake = snake;
         this.coin = coin;
         this.gameView = gameView;
@@ -42,6 +44,7 @@ public class GameController implements CoinEffectContext{
         this.coinFactory = new CoinFactory(game.getDifficulty());
         this.highScore = highScore;
         this.obstacle = obstacle;
+        this.onNewHighScore = onNewHighScore;
 
         animation.setCycleCount(Animation.INDEFINITE);
         animation.setRate(game.getSpeed());
@@ -213,6 +216,9 @@ public class GameController implements CoinEffectContext{
         scoreRecorded = true;
 
         boolean newRecord = highScore.submit(game.getDifficulty(), game.getScorePoints());
+        if (newRecord){
+            onNewHighScore.run();
+        }
         gameView.setBestScore(highScore.getBest(game.getDifficulty()));
         gameView.showNewHighScore(newRecord);
     }

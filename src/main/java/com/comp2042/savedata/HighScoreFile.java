@@ -18,7 +18,7 @@ public class HighScoreFile {
         this. path = path;
     }
 
-    private static HighScoreFile inUserHome(){
+    public static HighScoreFile inUserHome(){
         return new HighScoreFile(Path.of(System.getProperty("user.home"), ".snakegame", "highscores.properties"));
     }
 
