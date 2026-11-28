@@ -18,7 +18,7 @@ public abstract class Coin {
             p = new Point(random.nextInt(width), random.nextInt(height));
         } while (snake.getHead().equals(p)
                 || snake.getBody().contains(p)
-                || obstacle.getObstacles().contains(p));
+                || obstacle.isBlocked(p));
         pos = p;
     }
 

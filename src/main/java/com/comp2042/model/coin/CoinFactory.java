@@ -26,7 +26,7 @@ public class CoinFactory {
 
     public Coin create(int width, int height, Snake snake, Obstacle obstacle, boolean powerUps){
         CoinType type = powerUps
-                ? pickType(!obstacle.getObstacles().isEmpty())
+                ? pickType(obstacle.hasSpawned())
                 : CoinType.RED;
 
         return switch (type){

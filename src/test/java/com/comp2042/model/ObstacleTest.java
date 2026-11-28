@@ -50,10 +50,67 @@ class ObstacleTest {
     }
 
     @Test
-    void resetClearAllObstacles(){
+    void resetClearSpawnedObstacles(){
         Obstacle obstacle = spawn(40, null);
         obstacle.reset();
         assertTrue(obstacle.getObstacles().isEmpty());
     }
+
+    @Test
+    void resetKeepsWallsButClearsSpawnedObstacles(){
+        Obstacle obstacle = new Obstacle(size, size);
+        obstacle.addWall(new Point(0,0));
+        Snake snake = new Snake(size, size, false, obstacle);
+        Coin coin = new RedCoin(size, size, snake, obstacle);
+        obstacle.newObstacles(snake, coin, 5);
+
+        obstacle.reset();
+
+        assertEquals(1, obstacle.getWalls().size());
+        assertTrue(obstacle.getSpawned().isEmpty());
+    }
+
+    @Test
+    void  fixedWallsAreNotCountedAsSpawnedObstacles(){
+        Obstacle obstacle = new Obstacle(size, size);
+        obstacle.setWalls(GameMap.PILLARS.getWalls());
+        assertFalse(obstacle.hasSpawned());
+    }
+
+    @Test
+    void spawnedObstaclesNeverSpawnOnFixedWalls(){
+        Obstacle obstacle = new Obstacle(size, size);
+        obstacle.setWalls(GameMap.MAZE.getWalls());
+        Snake snake = new Snake(size, size, false, obstacle);
+        Coin coin = new RedCoin(size,size, snake, obstacle);
+
+        obstacle.newObstacles(snake, coin, 30);
+
+        for (Point p : obstacle.getSpawned()){
+            assertFalse(obstacle.getWalls().contains(p), "obstacle on a wall: " + p);
+        }
+    }
+
+    @Test
+    void  isBlockedCoversWallsAndSpawnedObstacles(){
+        Obstacle obstacle = new Obstacle(size, size);
+        obstacle.addWall(new Point(2, 2));
+        Snake snake = new Snake(size, size, false, obstacle);
+        Coin coin = new RedCoin(size, size, snake, obstacle);
+        obstacle.newObstacles(snake, coin, 1);
+
+        assertTrue(obstacle.isBlocked(new Point(2, 2)));
+        assertTrue(obstacle.isBlocked(obstacle.getSpawned().get(0)));
+        assertFalse(obstacle.isBlocked(new Point(10, 10)));
+    }
+
+    @Test
+    void getObstacleReturnsACopyNothingElse(){
+        Obstacle obstacle = new Obstacle(size, size);
+        obstacle.addWall(new Point(1, 1));
+        obstacle.getObstacles().clear();
+        assertEquals(1, obstacle.getObstacles().size());
+    }
+
 }
 

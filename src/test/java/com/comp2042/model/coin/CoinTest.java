@@ -26,14 +26,14 @@ class CoinTest {
 
     @Test
     void coinNeverSpawnsOnSnakeObstacleOrOffGrid(){
-        obstacle.getObstacles().add(new Point(0, 0));
-        obstacle.getObstacles().add(new Point(5, 5));
+        obstacle.addWall(new Point(0, 0));
+        obstacle.addWall(new Point(5, 5));
         for (int i = 0; i < 1000; i++){
             Point p = new RedCoin(size, size, snake, obstacle).getPos();
             assertTrue(p.x >= 0 && p.y >= 0 && p.x <= size && p.y <= size, "off grid " + p);
             assertNotEquals(snake.getHead(), p);
             assertFalse(snake.getBody().contains(p));
-            assertFalse(obstacle.getObstacles().contains(p));
+            assertFalse(obstacle.isBlocked(p));
         }
     }
 

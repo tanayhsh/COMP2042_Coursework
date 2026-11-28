@@ -47,7 +47,7 @@ public class Snake {
         }
 
         // checked after any wrapped so the snake can never land on an obstacle
-        if (!dead && obstacle.getObstacles().contains(head)){
+        if (!dead && obstacle.isBlocked(head)){
             head.setLocation(previous);
             dead = true;
         }

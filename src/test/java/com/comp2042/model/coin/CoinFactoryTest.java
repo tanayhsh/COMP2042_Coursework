@@ -59,4 +59,18 @@ class CoinFactoryTest {
             assertEquals(CoinType.RED, factory.create(size, size,snake, obstacle, false).getType());
         }
     }
+
+    @Test
+    void silverCoinCanSpawnOnAMapWithWalls(){
+        Obstacle obstacle = new Obstacle(size, size);
+        obstacle.setWalls(GameMap.MAZE.getWalls());
+        Snake snake = new Snake(size, size, false, obstacle);
+        CoinFactory factory = new CoinFactory(Difficulty.NORMAL, new Random(42));
+
+        boolean sawSilver = false;
+        for (int i = 0; i < 2000 && !sawSilver; i++){
+            sawSilver = factory.create(size, size, snake, obstacle, true).getType() == CoinType.SILVER;
+        }
+        assertTrue(sawSilver, "silver coin never spawned on a map with walls");
+    }
 }
