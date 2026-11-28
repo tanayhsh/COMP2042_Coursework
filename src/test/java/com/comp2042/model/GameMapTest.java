@@ -13,7 +13,7 @@ public class GameMapTest{
     private static final int size = 20;
     private static final Point start_head = new Point(size / 2, size / 2);
     private static final Point start_body = new Point(size/2 + 1, size / 2);
-    private static final int safe_dist = 3;
+    private static final int SAFE_DIST = 3;
 
     @Test
     void openMapHasNoWalls(){
@@ -44,7 +44,7 @@ public class GameMapTest{
         for (GameMap map : GameMap.values()){
             for (Point wall : map.getWalls()){
                 int distance = Math.abs(wall.x - start_head.x) + Math.abs(wall.y - start_head.y);
-                assertTrue(distance > safe_dist, map + " has a wall too close to the start: " + wall);
+                assertTrue(distance > SAFE_DIST, map + " has a wall too close to the start: " + wall);
                 assertNotEquals(start_body, wall, map + "has a wall on the starting body");
             }
         }

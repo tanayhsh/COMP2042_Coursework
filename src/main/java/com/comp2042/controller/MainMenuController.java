@@ -1,10 +1,7 @@
 package com.comp2042.controller;
 
 import com.comp2042.Main;
-import com.comp2042.model.Difficulty;
-import com.comp2042.model.Game;
-import com.comp2042.model.Obstacle;
-import com.comp2042.model.Snake;
+import com.comp2042.model.*;
 import com.comp2042.model.coin.Coin;
 import com.comp2042.model.coin.RedCoin;
 import com.comp2042.view.GameView;
@@ -30,6 +27,8 @@ public class MainMenuController {
     @FXML private CheckBox chk_powerUp;
 
     private final ToggleGroup difficultyGroup = new ToggleGroup();
+
+    private static final GameMap map = GameMap.OPEN;
 
     private Scene gameScene;
 
@@ -73,8 +72,9 @@ public class MainMenuController {
     }
 
     private void launchSnake(Stage gameStage, Difficulty difficulty, boolean powerUp) {
-        Game game = new Game(X_VALUE, Y_VALUE, powerUp, difficulty);
+        Game game = new Game(X_VALUE, Y_VALUE, powerUp, difficulty, map);
         Obstacle obstacle = new Obstacle(game.getWidth(), game.getHeight());
+        obstacle.setWalls(game.getMap().getWalls());
         Snake snake = new Snake(game.getWidth(), game.getHeight(), game.isNoBorder(), obstacle);
         Coin coin = new RedCoin(game.getWidth(), game.getHeight(), snake, obstacle);
 

@@ -147,14 +147,14 @@ public enum GameMap {
     public List<Point> getWalls() {
         List<Point> copy = new ArrayList<>();
         for (Point wall: walls){
-            copy.add(wall);
+            copy.add(new Point(wall));
         }
         return copy;
     }
 
     static List<Point> parse(String[] layout){
         if (layout.length != size){
-            throw new IllegalArgumentException("Map must have" + size + "rows, but has " + layout.length);
+            throw new IllegalArgumentException("Map must have " + size + "rows, but has " + layout.length);
         }
         List<Point> walls = new ArrayList<>();
         for (int y = 0; y < size; y++){

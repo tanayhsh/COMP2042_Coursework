@@ -15,13 +15,24 @@ public class Game {
     private boolean powerUp;
     private boolean noBorder;
     private final Difficulty difficulty;
+    private final GameMap map;
 
-    public Game(int x, int y, boolean powerUp, Difficulty difficulty) {
+
+    public Game(int x, int y, boolean powerUp, Difficulty difficulty){
+        this(x, y, powerUp, difficulty, GameMap.OPEN);
+    }
+
+    public Game(int x, int y, boolean powerUp, Difficulty difficulty, GameMap map) {
+        if (!map.getWalls().isEmpty() && (x != GameMap.size || y != GameMap.size)){
+            throw new IllegalArgumentException("Maps are drawn for a " + GameMap.size + "x" + GameMap.size + " board");
+        }
+
         this.difficulty = difficulty;
+        this.map = map;
         this.powerUp = powerUp;
         width = x;
         height = y;
-        initialCoinsToWin = x * y - 2;
+        initialCoinsToWin = x * y - 2 - map.getWalls().size();
         coinsToWin = initialCoinsToWin;
 
         speed = difficulty.getSpeed();
@@ -94,5 +105,9 @@ public class Game {
 
     public Difficulty getDifficulty() {
         return difficulty;
+    }
+
+    public GameMap getMap() {
+        return map;
     }
 }

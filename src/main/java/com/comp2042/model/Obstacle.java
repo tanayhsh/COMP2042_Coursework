@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Obstacle {
-    private static final int safe_dist = 3;
-    private static final int max_spawned = 50;
+    private static final int SAFE_DIST = 3;
+    private static final int MAX_SPAWNED = 50;
     private Color color = Color.BLACK;
 
     private final List<Point> walls = new ArrayList<>();        // for the map; permanent
@@ -24,7 +24,7 @@ public class Obstacle {
     }
 
     public int newObstacles(Snake snake, Coin coin, int amount) {
-        if (spawned.size() > max_spawned) {
+        if (spawned.size() > MAX_SPAWNED) {
             return 0;
         }
         Random rnd = new Random();
@@ -42,7 +42,7 @@ public class Obstacle {
     }
 
     private boolean tooCLoseToHead(Point p, Point head) {
-        return Math.abs(p.x - head.x) + Math.abs(p.y - head.y) <= safe_dist;
+        return Math.abs(p.x - head.x) + Math.abs(p.y - head.y) <= SAFE_DIST;
     }
 
     public Color getColor() {

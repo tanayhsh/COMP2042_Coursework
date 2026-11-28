@@ -80,4 +80,29 @@ class GameTest{
         assertTrue(easy.getSpeed() < hard.getSpeed());
     }
 
+    @Test
+    void fixedWallsReduceCoinsToWin(){
+        Game game =  new Game(20, 20, true, Difficulty.NORMAL, GameMap.PILLARS);
+        assertEquals(398 - GameMap.PILLARS.getWalls().size(), game.getCoinsToWin());
+    }
+
+    @Test
+    void resetScoreKeepsWallDeductionFromCoinsToWin(){
+        Game game = new Game(20, 20, true, Difficulty.NORMAL, GameMap.MAZE);
+        int start = game.getCoinsToWin();
+        game.reduceCoinsToWin(5);
+        game.resetScore();
+        assertEquals(start, game.getCoinsToWin());
+    }
+
+    @Test
+    void openMapIsDefaultSelection(){
+        assertEquals(GameMap.OPEN, new Game(20, 20, true, Difficulty.NORMAL).getMap());
+    }
+
+    @Test
+    void rejectedWallMapWhenBoardSizeDoesNotMatch(){
+        assertThrows(IllegalArgumentException.class, () -> new Game(10, 10, true, Difficulty.NORMAL, GameMap.BOX));
+    }
+
 }

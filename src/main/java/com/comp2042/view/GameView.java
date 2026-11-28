@@ -44,6 +44,7 @@ public class GameView {
     private final int[][] turnArray;
     private final EntityManager entity = new EntityManager();
     private int bestScore;
+    private static final Color wall_colour = Color.web("#555555");
 
     public GameView(Game game) {
         this.game = game;
@@ -140,6 +141,11 @@ public class GameView {
 
         gc.setFill(obstacle.getColor());
         for (Point point : obstacle.getObstacles()) {
+            gc.fillRect(point.x * game.getCellSize() * fullScale, point.y * game.getCellSize() * fullScale, game.getCellSize() * fullScale, game.getCellSize() * fullScale);
+        }
+
+        gc.setFill(wall_colour);
+        for (Point point : obstacle.getSpawned()) {
             gc.fillRect(point.x * game.getCellSize() * fullScale, point.y * game.getCellSize() * fullScale, game.getCellSize() * fullScale, game.getCellSize() * fullScale);
         }
     }
